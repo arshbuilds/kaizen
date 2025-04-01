@@ -3,13 +3,13 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyBaZpWNIA0geXKU6mQzinh3XbcLiaDVdO0",
-  authDomain: "ecommerce-d5edd.firebaseapp.com",
-  projectId: "ecommerce-d5edd",
-  storageBucket: "ecommerce-d5edd.appspot.com",
-  messagingSenderId: "636775073841",
-  appId: "1:636775073841:web:ffdf7669f4223596e5ad10",
-  measurementId: "G-LDMGKRLLXS",
+  apiKey: "AIzaSyAYqFtX4lBsRRCFB6fBlvz6qzrFc0vmZ80",
+  authDomain: "kaizen-b8806.firebaseapp.com",
+  projectId: "kaizen-b8806",
+  storageBucket: "kaizen-b8806.firebasestorage.app",
+  messagingSenderId: "62250180001",
+  appId: "1:62250180001:web:94e1dd285dbdfef15f3fe0",
+  measurementId: "G-L6B79BSYW8",
 };
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
