@@ -1,12 +1,14 @@
+import { FirestoreTimestamp } from "../lib/firebase";
+
 export type todoType = {
     todoId: string;
     goalId: string;
     title: string;
     description: string;
-    dueDate: string; 
-    status: string;
+    dueDate: FirestoreTimestamp; 
+    status: boolean;
     priority: string;
-    createdAt: string; 
+    createdAt: FirestoreTimestamp; //TODO:- update into servertimestamp later
     type: string
 };
 

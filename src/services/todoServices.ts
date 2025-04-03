@@ -6,11 +6,13 @@ import {
   updateUserTodo,
 } from "../repositories/todoRepos";
 import { formTodoType, todoType, updateTodoType } from "../types/todoTypes";
+import { serverTimestamp, Timestamp } from "firebase/firestore";
 
 export const addTodoByUser = async (
   formData: formTodoType,
   userId: string,
-  goalId: string
+  goalId: string, 
+  dueBy: Date
 ) => {
   try {
     if (!formData.title.trim()) throw new Error("Title cannot be empty");
@@ -20,10 +22,10 @@ export const addTodoByUser = async (
       goalId: goalId,
       title: formData.title,
       description: formData.description,
-      dueDate: formData.dueDate,
-      status: "pending",
+      dueDate: dueBy? Timestamp.fromDate(dueBy) : serverTimestamp(), 
+      status: false,
       priority: formData.priority,
-      createdAt: "//TODO:- Make use of server timeStamp",
+      createdAt: serverTimestamp(),
       type: formData.type,
     };
     await addUserTodo({ data, userId });
