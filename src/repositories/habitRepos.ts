@@ -16,7 +16,7 @@ type addUserHabitParams = {
 };
 
 export const addUserHabit = async (params: addUserHabitParams) => {
-  const docRef = doc(db, `users/${params.userId}/Habits`);
+  const docRef = doc(db, `users/${params.userId}/habits`);
   await setDoc(docRef, params.data);
 };
 
@@ -29,7 +29,7 @@ export const getUserHabitsData = async (params: getUserHabitParams) => {
   const data: Array<habitType> = [];
   const collectionRef = collection(
     db,
-    `/users/${params.userId}/Habits`
+    `/users/${params.userId}/habits`
   );
 
   const querySnapshot = await getDocs(collectionRef);
@@ -49,7 +49,7 @@ type updateUserHabitType = {
 export const updateUserHabit = async (params: updateUserHabitType) => {
   const docRef = doc(
     db,
-    `users/${params.userId}/Habits/${params.habitId}`
+    `users/${params.userId}/habits/${params.habitId}`
   );
   await updateDoc(docRef, params.data);
 };
@@ -63,7 +63,7 @@ type deleteUserHabitParams = {
 export const deleteUserHabit = async (params: deleteUserHabitParams) => {
   const docRef = doc(
     db,
-    `users/${params.userId}/Habits/${params.habitId}`
+    `users/${params.userId}/habits/${params.habitId}`
   );
   await deleteDoc(docRef);
 };

@@ -33,7 +33,7 @@ export const addhabitByUser = async (
   }
 };
 
-export const gethabitsByUser = async (userId: string) => {
+export const getHabitsByUser = async (userId: string) => {
   const docData = await getUserHabitsData({ userId });
   //TODO:- filter by completion and/or streak
   return docData;
