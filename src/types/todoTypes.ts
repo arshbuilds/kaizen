@@ -8,7 +8,7 @@ export type todoType = {
     dueDate: FirestoreTimestamp; 
     status: boolean;
     priority: string;
-    createdAt: FirestoreTimestamp; //TODO:- update into servertimestamp later
+    createdAt: FirestoreTimestamp; 
     type: string
 };
 

@@ -7,7 +7,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../lib/firebase";
-import { habitType, updateHabitType } from "../types/habitTypes";
+import { habitType, partialHabitType } from "../types/habitTypes";
 
 //CREATE a new user Habit
 type addUserHabitParams = {
@@ -16,7 +16,7 @@ type addUserHabitParams = {
 };
 
 export const addUserHabit = async (params: addUserHabitParams) => {
-  const docRef = doc(db, `users/${params.userId}/habits`);
+  const docRef = doc(db, `users/${params.userId}/habits/${params.data.habitId}`);
   await setDoc(docRef, params.data);
 };
 
@@ -41,7 +41,7 @@ export const getUserHabitsData = async (params: getUserHabitParams) => {
 
 //UPDATE a user Habit
 type updateUserHabitType = {
-  data: updateHabitType;
+  data: partialHabitType;
   userId: string;
   habitId: string;
 };

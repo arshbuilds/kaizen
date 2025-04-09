@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getTodosByUser } from "@/src/services/todoServices";
 import { HabitTaskItem, TodoTaskItem } from "./TaskItem";
 import { getHabitsByUser } from "@/src/services/habitServices";
+import { habitType } from "@/src/types/habitTypes";
+import { wasCompletedYesterday } from "@/src/lib/utils";
 
 type todoTaskItemMapperProps = {
   goalId: string;
@@ -15,7 +17,6 @@ export const TodoTaskItemMapper = ({
   type,
   userId,
 }: todoTaskItemMapperProps) => {
-
   const { isPending, isError, data, error } = useQuery({
     queryKey: [`${type}-todos`],
     queryFn: async () => {
@@ -46,11 +47,17 @@ type habitTaskItemMapperProps = {
 };
 
 export const HabitTaskItemMapper = ({ userId }: habitTaskItemMapperProps) => {
+
   const { isPending, isError, data, error } = useQuery({
     queryKey: [`habits`],
-    queryFn: async () => {
-      const data = await getHabitsByUser(userId);
-      return data;
+    queryFn: async () => await getHabitsByUser(userId),
+    select: (data) => {
+      return data.map((habit: habitType) => {
+        console.log(wasCompletedYesterday(habit.lastCompleted))
+        return ({
+        ...habit,
+        streak: wasCompletedYesterday(habit.lastCompleted) ? habit.streak : 0,
+      })});
     },
   });
 

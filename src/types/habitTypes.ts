@@ -5,9 +5,8 @@ export type habitType = {
   title: string;
   streak: number;
   status: boolean;
-  lastCompleted: FirestoreTimestamp; //TODO:- change into server time stamp later
+  lastCompleted: FirestoreTimestamp; 
   createdAt: FirestoreTimestamp;
 };
 
-export type formHabitType = Omit<habitType, "habitId" | "createdAt">;
-export type updateHabitType = Partial<habitType>;
+export type partialHabitType = Partial<habitType>;

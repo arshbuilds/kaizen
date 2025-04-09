@@ -1,5 +1,5 @@
 import { kebabCase } from "lodash";
-import { formHabitType, habitType, updateHabitType } from "../types/habitTypes";
+import { habitType, partialHabitType } from "../types/habitTypes";
 import {
   addUserHabit,
   deleteUserHabit,
@@ -8,12 +8,13 @@ import {
 } from "../repositories/habitRepos";
 import { serverTimestamp } from "firebase/firestore";
 
-export const addhabitByUser = async (
-  formData: formHabitType,
+export const addHabitByUser = async (
+  formData: partialHabitType,
   userId: string
 ) => {
   try {
-    if (!formData.title.trim()) throw new Error("Title cannot be empty");
+    if(formData.title){
+    if (!formData.title.trim() ) throw new Error("Title cannot be empty")
 
     const data: habitType = {
       habitId: kebabCase(formData.title),
@@ -24,6 +25,7 @@ export const addhabitByUser = async (
       createdAt: serverTimestamp(),
     };
     await addUserHabit({ data, userId });
+  }
   } catch (e) {
     if (typeof e === "string") {
       e.toUpperCase();
@@ -35,12 +37,17 @@ export const addhabitByUser = async (
 
 export const getHabitsByUser = async (userId: string) => {
   const docData = await getUserHabitsData({ userId });
-  //TODO:- filter by completion and/or streak
-  return docData;
+  const completed = docData
+    .filter((doc) => doc.status === true)
+    .sort((a, b) => b.streak - a.streak);
+  const pending = docData
+    .filter((doc) => doc.status === false)
+    .sort((a, b) => b.streak - a.streak);
+  return pending.concat(completed);
 };
 
-export const updatehabitByUser = async (
-  data: updateHabitType,
+export const updateHabitByUser = async (
+  data: partialHabitType,
   userId: string,
   habitId: string
 ) => {
