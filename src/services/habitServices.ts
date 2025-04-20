@@ -13,25 +13,22 @@ export const addHabitByUser = async (
   userId: string
 ) => {
   try {
-    if(formData.title){
-    if (!formData.title.trim() ) throw new Error("Title cannot be empty")
+    if (formData.title) {
+      if (!formData.title.trim()) throw new Error("Title cannot be empty");
 
-    const data: habitType = {
-      habitId: kebabCase(formData.title),
-      title: formData.title,
-      status: false,
-      streak: 0,
-      lastCompleted: serverTimestamp(),
-      createdAt: serverTimestamp(),
-    };
-    await addUserHabit({ data, userId });
-  }
-  } catch (e) {
-    if (typeof e === "string") {
-      e.toUpperCase();
-    } else if (e instanceof Error) {
-      console.error(e.message);
+      const data: habitType = {
+        habitId: kebabCase(formData.title),
+        title: formData.title,
+        status: false,
+        streak: 0,
+        lastCompleted: serverTimestamp(),
+        createdAt: serverTimestamp(),
+      };
+      await addUserHabit({ data, userId });
     }
+  } catch (e) {
+    console.error("Login failed:", e);
+    throw e;
   }
 };
 
@@ -54,11 +51,9 @@ export const updateHabitByUser = async (
   try {
     await updateUserHabit({ data, userId, habitId });
   } catch (e) {
-    if (typeof e === "string") {
-      e.toUpperCase();
-    } else if (e instanceof Error) {
-      console.error(e.message);
-    }
+
+    console.error("Login failed:", e);
+    throw e;
   }
 };
 
@@ -66,10 +61,8 @@ export const deletehabitByUser = async (userId: string, habitId: string) => {
   try {
     await deleteUserHabit({ userId, habitId });
   } catch (e) {
-    if (typeof e === "string") {
-      e.toUpperCase();
-    } else if (e instanceof Error) {
-      console.error(e.message);
-    }
+
+    console.error("Login failed:", e);
+    throw e;
   }
 };

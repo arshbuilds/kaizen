@@ -12,5 +12,4 @@ export type todoType = {
     type: string
 };
 
-export type formTodoType = Omit<todoType, "todoId"| "createdAt" | "goalId">
-export type updateTodoType = Partial<todoType>
+export type partialTodoType = Partial<todoType>

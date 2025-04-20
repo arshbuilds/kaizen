@@ -5,28 +5,31 @@ import { getTodosByUser } from "@/src/services/todoServices";
 import { HabitTaskItem, TodoTaskItem } from "./TaskItem";
 import { getHabitsByUser } from "@/src/services/habitServices";
 import { habitType } from "@/src/types/habitTypes";
-import { wasCompletedYesterday } from "@/src/lib/utils";
+import { wasCompletedYesterday } from "@/src/utils/dateTimeUtils";
+import { useAuth } from "@/src/hooks/useAuth";
+import Loading from "../Loading/Loading";
 
 type todoTaskItemMapperProps = {
   goalId: string;
   type: string;
-  userId: string;
+  timeRange: "today"| "all"
 };
 export const TodoTaskItemMapper = ({
   goalId,
   type,
-  userId,
+  timeRange
 }: todoTaskItemMapperProps) => {
+  const {user} = useAuth()
   const { isPending, isError, data, error } = useQuery({
     queryKey: [`${type}-todos`],
     queryFn: async () => {
-      const data = await getTodosByUser(userId, goalId, type);
+      const data = await getTodosByUser(user!.userId, goalId, type, timeRange);
       return data;
     },
   });
 
   if (isPending) {
-    return <span>Loading...</span>;
+    return <Loading/>;
   }
 
   if (isError) {
@@ -42,27 +45,22 @@ export const TodoTaskItemMapper = ({
   );
 };
 
-type habitTaskItemMapperProps = {
-  userId: string;
-};
 
-export const HabitTaskItemMapper = ({ userId }: habitTaskItemMapperProps) => {
-
+export const HabitTaskItemMapper = () => {
+  const {user} = useAuth()
   const { isPending, isError, data, error } = useQuery({
     queryKey: [`habits`],
-    queryFn: async () => await getHabitsByUser(userId),
+    queryFn: async () => await getHabitsByUser(user!.userId),
     select: (data) => {
-      return data.map((habit: habitType) => {
-        console.log(wasCompletedYesterday(habit.lastCompleted))
-        return ({
+      return data.map((habit: habitType) => ({
         ...habit,
         streak: wasCompletedYesterday(habit.lastCompleted) ? habit.streak : 0,
-      })});
+      }));
     },
   });
 
   if (isPending) {
-    return <span>Loading...</span>;
+    return <Loading/>;
   }
 
   if (isError) {

@@ -1,13 +1,17 @@
-import { todoType, updateTodoType } from "../types/todoTypes";
+import { partialTodoType, todoType } from "../types/todoTypes";
 import {
   collection,
   deleteDoc,
   doc,
   getDocs,
+  query,
   setDoc,
+  Timestamp,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { db } from "../lib/firebase";
+import { getStartAndEndOfToday } from "../utils/dateTimeUtils";
 
 //CREATE a new user todo
 type addUserTodoParams = {
@@ -29,6 +33,7 @@ type getUserTodoParams = {
   userId: string;
   goalId: string;
   type: string;
+  timeRange: "today" | "all";
 };
 
 export const getUserTodosData = async (params: getUserTodoParams) => {
@@ -37,9 +42,20 @@ export const getUserTodosData = async (params: getUserTodoParams) => {
     db,
     `/users/${params.userId}/goals/${params.goalId}/todo-${params.type}`
   );
+  let q;
 
-  const querySnapshot = await getDocs(collectionRef);
-  querySnapshot.forEach((doc) => {
+  if (params.timeRange === "today") {
+    const { start, end } = getStartAndEndOfToday();
+    q = query(
+      collectionRef,
+      where("dueDate", ">=", Timestamp.fromDate(start)),
+      where("dueDate", "<", Timestamp.fromDate(end))
+    );
+  } else {
+    q = query(collectionRef);
+  }
+  const snapshot = await getDocs(q);
+  snapshot.forEach((doc) => {
     data.push({ todoId: doc.id, ...doc.data() } as todoType);
   });
   return data;
@@ -47,7 +63,7 @@ export const getUserTodosData = async (params: getUserTodoParams) => {
 
 //UPDATE a user todo
 type updateUserTodoType = {
-  data: updateTodoType;
+  data: partialTodoType;
   userId: string;
   goalId: string;
   todoType: string;

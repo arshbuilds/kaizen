@@ -1,10 +1,6 @@
-import { kebabCase } from "lodash";
 import { Timestamp } from "firebase/firestore";
-import { FirestoreTimestamp } from "./firebase";
+import { FirestoreTimestamp } from "../lib/firebase";
 
-export const turnIntoKebab = (text: string) => {
-  return kebabCase(text);
-};
 
 function convertToDate(value: FirestoreTimestamp): Date | null {
   if (value instanceof Timestamp) return value.toDate();
@@ -29,4 +25,12 @@ export function wasCompletedYesterday(
   const diffDays = diffTime / (1000 * 60 * 60 * 24);
 
   return diffDays === 0 || diffDays === 1;
+}
+
+export function getStartAndEndOfToday() {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const end = new Date(start);
+  end.setDate(start.getDate() + 1);
+  return { start, end };
 }

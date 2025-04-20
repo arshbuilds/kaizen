@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addHabitByUser } from "@/src/services/habitServices";
 import { partialHabitType } from "@/src/types/habitTypes";
 import { toast } from "sonner";
+import { useAuth } from "@/src/hooks/useAuth";
 
 const habitSchema = z.object({
   title: z.string().min(1, "Please enter a valid title"),
@@ -16,6 +17,7 @@ type HabitForm = z.infer<typeof habitSchema>;
 
 const CreateNewHabitPopup = () => {
   const queryClient = useQueryClient();
+  const {user} = useAuth()
   const {
     register,
     handleSubmit,
@@ -26,7 +28,7 @@ const CreateNewHabitPopup = () => {
 
   const addHabitMutation = useMutation({
     mutationFn: (title: string) =>
-      addHabitByUser({ title }, "CFOsu6H7SS6Y5MlLBJf3"),
+      addHabitByUser({ title }, user!.userId),
     onMutate: async (title) => {
       await queryClient.cancelQueries({ queryKey: ["habits"] });
       const prevData = queryClient.getQueryData(["habits"]);

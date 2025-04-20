@@ -1,6 +1,5 @@
 "use client";
 import { FirestoreTimestamp } from "@/src/lib/firebase";
-import { wasCompletedYesterday } from "@/src/lib/utils";
 import {
   deletehabitByUser,
   updateHabitByUser,
@@ -8,6 +7,7 @@ import {
 import { deleteTodoByUser, updateTodoByUser } from "@/src/services/todoServices";
 import { habitType } from "@/src/types/habitTypes";
 import { todoType } from "@/src/types/todoTypes";
+import { wasCompletedYesterday } from "@/src/utils/dateTimeUtils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { serverTimestamp } from "firebase/firestore";
 import { toast } from "sonner";
