@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import {
 //   loginWithEmailPass,
 //   loginWithGoogle,
@@ -7,9 +7,21 @@ import React, { useState } from "react";
 // } from "@/src/services/authServices";
 import SignupForm from "@/src/components/Auth/SignupForm";
 import LoginForm from "@/src/components/Auth/LoginForm";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useAuthStore } from "@/src/stores/useAuthStore";
 
 const Enter = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo") || "/";
   const [openForm, setOpenForm] = useState(true);
+  const { user } = useAuthStore();
+
+  useEffect(() => {
+    if (user) {
+      router.push(redirectTo);
+    }
+  }, [user, redirectTo, router]);
   return (
     <div>
       <div>

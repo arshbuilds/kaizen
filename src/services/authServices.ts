@@ -11,6 +11,7 @@ import { addNewUser } from "../repositories/authRepos";
 import { getRandomNumber } from "../utils/genUtils";
 import { toast } from "sonner";
 import { doc, getDoc } from "firebase/firestore";
+import { userType } from "../types/userTypes";
 
 const provider = new GoogleAuthProvider();
 
@@ -34,7 +35,7 @@ export const loginWithGoogle = async () => {
     });
     const userData = {
       userId: user.uid,
-      name: user.displayName
+      userName: user.displayName
         ? user.displayName
         : `user${getRandomNumber(100000000, 999999999)}`,
       email: user.email,
@@ -57,47 +58,46 @@ export const signupWithEmailPass = async ({
   username: string;
   email: string;
   pass: string;
-}) => {
+}): Promise<userType> => {
   try {
     const result = await createUserWithEmailAndPassword(auth, email, pass);
     const user = result.user;
     const pfpUrl = `https://api.dicebear.com/7.x/thumbs/svg?seed=${user.uid}`;
-    useAuthStore.getState().setUser({
+    const userData = {
       userId: user.uid,
       userName: username,
       email,
       pfpUrl,
-    });
-    const userData = {
-      userId: user.uid,
-      name: user.displayName
-        ? user.displayName
-        : `user${getRandomNumber(100000000, 999999999)}`,
-      email,
-      pfpUrl,
     };
     await addNewUser(userData);
+    return userData;
   } catch (e) {
     console.error("Login failed:", e);
     throw e;
   }
 };
 
-export const loginWithEmailPass = async ({email, password}:{email: string, password: string}) => {
+export const loginWithEmailPass = async ({
+  email,
+  pass,
+}: {
+  email: string;
+  pass: string;
+}): Promise<userType> => {
   try {
-    const { user } = await signInWithEmailAndPassword(auth, email, password);
+    const { user } = await signInWithEmailAndPassword(auth, email, pass);
 
     const userDocRef = doc(db, "users", user.uid);
     const userSnap = await getDoc(userDocRef);
-
     if (userSnap.exists()) {
-      const userData = userSnap.data();
-      useAuthStore.getState().setUser({
+      const data = userSnap.data();
+      const userData = {
         userId: user.uid,
-        userName: userData.name,
-        email: userData.email ?? "",
-        pfpUrl: userData.pfpUrl
-      });
+        userName: data.name,
+        email: data.email ?? "",
+        pfpUrl: data.pfpUrl,
+      };
+      return userData;
     } else {
       throw new Error("User data not found in Firestore.");
     }

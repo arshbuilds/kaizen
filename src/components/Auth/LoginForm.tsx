@@ -1,9 +1,13 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-// import { useQueryClient } from '@tanstack/react-query'
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useMutation } from "@tanstack/react-query";
+import { loginWithEmailPass } from "@/src/services/authServices";
+import { useAuthStore } from "@/src/stores/useAuthStore";
+import { userType } from "@/src/types/userTypes";
+import { toast } from "sonner";
 
 const loginFormSchema = z.object({
   email: z.string().email("Please enter a valid email"),
@@ -16,6 +20,21 @@ const loginFormSchema = z.object({
 type loginFormType = z.infer<typeof loginFormSchema>
 
 const LoginForm = () => {
+
+  const loginMutation = useMutation({
+    mutationFn: async (data: {email: string, pass: string}) => {
+      return await loginWithEmailPass({email: data.email, pass: data.pass})
+    },
+    onSuccess: (userData: userType) => {
+      useAuthStore.getState().setUser(userData);
+      toast.success("Login successfull")
+    },
+      onError: (err) => {
+      toast.error("Some error occured")
+      console.error("Login error", err);
+    }
+  })
+
   const {
     register,
     handleSubmit,
@@ -25,7 +44,7 @@ const LoginForm = () => {
   });
 
   const onSubmit = (data:loginFormType) => {
-    console.log(data)
+    loginMutation.mutate(data)
   }
 
   return(

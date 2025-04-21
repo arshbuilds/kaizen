@@ -8,7 +8,7 @@ import { AuthGate } from "../components/Auth/AuthGate";
 import LogoutButton from "../components/Auth/LogoutButton";
 import { StatCard } from "../components/ui/cards";
 import { FaBrain } from "react-icons/fa";
-import { ProfileTag, ProfileTags } from "../components/ui/tags";
+import { ProfileTag } from "../components/ui/tags";
 
 
 export default function Home() {
