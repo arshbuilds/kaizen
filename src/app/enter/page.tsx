@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 // } from "@/src/services/authServices";
 import SignupForm from "@/src/components/Auth/SignupForm";
 import LoginForm from "@/src/components/Auth/LoginForm";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/src/stores/useAuthStore";
 
 const Enter = () => {

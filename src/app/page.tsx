@@ -6,9 +6,7 @@ import {
 import CreateNewHabitPopup from "../components/Habits/CreateNewHabitPopup";
 import { AuthGate } from "../components/Auth/AuthGate";
 import LogoutButton from "../components/Auth/LogoutButton";
-import { StatCard } from "../components/ui/cards";
-import { FaBrain } from "react-icons/fa";
-import { ProfileTag } from "../components/ui/tags";
+import Link from "next/link";
 
 
 export default function Home() {
@@ -22,9 +20,8 @@ export default function Home() {
       <AuthGate>
         <HabitTaskItemMapper />
         <CreateNewHabitPopup />
+        <Link href={'/profile'}>profile</Link>
         <LogoutButton/>
-        <StatCard title="shithead" info="5.5 hours" icon={FaBrain}/>
-        <ProfileTag title={"lazy prick"}/>
       </AuthGate>
     </div>
   );

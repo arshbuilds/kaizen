@@ -8,43 +8,72 @@ import {
 import { auth, db } from "../lib/firebase";
 import { useAuthStore } from "../stores/useAuthStore";
 import { addNewUser } from "../repositories/authRepos";
-import { getRandomNumber } from "../utils/genUtils";
-import { toast } from "sonner";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, serverTimestamp } from "firebase/firestore";
 import { userType } from "../types/userTypes";
 
 const provider = new GoogleAuthProvider();
 
-export const getUserData = async (uid: string) => {
-  const ref = doc(db, "users", uid);
-  const snapshot = await getDoc(ref);
-  if (!snapshot.exists()) throw new Error("User not found");
-  return snapshot.data();
-};
-
-export const loginWithGoogle = async () => {
+export const loginWithGoogle = async (): Promise<userType> => {
   try {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
     const pfpUrl = `https://api.dicebear.com/7.x/thumbs/svg?seed=${user.uid}`;
-    useAuthStore.getState().setUser({
-      userId: user.uid,
-      userName: user.displayName,
-      email: user.email,
-      pfpUrl: `https://api.dicebear.com/7.x/thumbs/svg?seed=${user.uid}`,
-    });
-    const userData = {
-      userId: user.uid,
-      userName: user.displayName
-        ? user.displayName
-        : `user${getRandomNumber(100000000, 999999999)}`,
-      email: user.email,
-      pfpUrl,
-    };
-    await addNewUser(userData);
-    toast.success("succesffull");
+    const userDocRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userDocRef);
+    if (userSnap.exists()) {
+      const data = userSnap.data();
+      const userData: userType = {
+        userId: user.uid,
+        userName: data.userName,
+        email: data.email,
+        pfpUrl: data.pfpUrl,
+        role: data.role,
+        interests: data.interests,
+        createdAt: data.createdAt,
+        followersCount: data.followersCount,
+        followingCount: data.followingCount,
+        goalsCount: data.goalsCount,
+        dailyFocusHours: data.dailyFocusHours,
+        dailyFocusDelta: data.dailyFocusDelta,
+        wellbeingScore: data.wellbeingScore,
+        wellbeingDelta: data.wellbeingDelta,
+        dayStreak: data.dayStreak,
+        meditationHours: data.meditationHours,
+        badgesCount: data.badgesCount,
+        totalCoins: data.totalCoins,
+        weeklyCoins: data.weeklyCoins,
+        todayCoins: data.todayCoins,
+        percentileRank: data.percentileRank,
+      };
+      return userData;
+    } else {
+      const userData: userType = {
+        userId: user.uid,
+        userName: user.displayName!,
+        email: user.email!,
+        pfpUrl: pfpUrl,
+        role: "",
+        interests: [],
+        createdAt: serverTimestamp(),
+        followersCount: 0,
+        followingCount: 0,
+        goalsCount: 0,
+        dailyFocusHours: 0,
+        dailyFocusDelta: 0,
+        wellbeingScore: 0,
+        wellbeingDelta: 0,
+        dayStreak: 0,
+        meditationHours: 0,
+        badgesCount: 0,
+        totalCoins: 0,
+        weeklyCoins: 0,
+        todayCoins: 0,
+        percentileRank: 0,
+      };
+      await addNewUser(userData);
+      return userData;
+    }
   } catch (e) {
-    toast.error("Some error occured");
     console.error("Google login error:", e);
     throw e;
   }
@@ -63,11 +92,28 @@ export const signupWithEmailPass = async ({
     const result = await createUserWithEmailAndPassword(auth, email, pass);
     const user = result.user;
     const pfpUrl = `https://api.dicebear.com/7.x/thumbs/svg?seed=${user.uid}`;
-    const userData = {
+    const userData: userType = {
       userId: user.uid,
       userName: username,
-      email,
-      pfpUrl,
+      email: email,
+      pfpUrl: pfpUrl,
+      role: "",
+      interests: [],
+      createdAt: serverTimestamp(),
+      followersCount: 0,
+      followingCount: 0,
+      goalsCount: 0,
+      dailyFocusHours: 0,
+      dailyFocusDelta: 0,
+      wellbeingScore: 0,
+      wellbeingDelta: 0,
+      dayStreak: 0,
+      meditationHours: 0,
+      badgesCount: 0,
+      totalCoins: 0,
+      weeklyCoins: 0,
+      todayCoins: 0,
+      percentileRank: 0,
     };
     await addNewUser(userData);
     return userData;
@@ -91,11 +137,28 @@ export const loginWithEmailPass = async ({
     const userSnap = await getDoc(userDocRef);
     if (userSnap.exists()) {
       const data = userSnap.data();
-      const userData = {
+      const userData: userType = {
         userId: user.uid,
-        userName: data.name,
-        email: data.email ?? "",
+        userName: data.userName,
+        email: email,
         pfpUrl: data.pfpUrl,
+        role: data.role,
+        interests: data.interests,
+        createdAt: data.createdAt,
+        followersCount: data.followersCount,
+        followingCount: data.followingCount,
+        goalsCount: data.goalsCount,
+        dailyFocusHours: data.dailyFocusHours,
+        dailyFocusDelta: data.dailyFocusDelta,
+        wellbeingScore: data.wellbeingScore,
+        wellbeingDelta: data.wellbeingDelta,
+        dayStreak: data.dayStreak,
+        meditationHours: data.meditationHours,
+        badgesCount: data.badgesCount,
+        totalCoins: data.totalCoins,
+        weeklyCoins: data.weeklyCoins,
+        todayCoins: data.todayCoins,
+        percentileRank: data.percentileRank,
       };
       return userData;
     } else {

@@ -52,7 +52,6 @@ const CreateNewHabitPopup = () => {
   });
 
   const onSubmit = (data: HabitForm) => {
-    console.log(data);
     addHabitMutation.mutate(data.title);
   };
 
