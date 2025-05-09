@@ -4,7 +4,7 @@ import React from 'react'
 
 const GrowthCoinsSection = (props: {totalCoins: number, weeklyCoins: number, todayCoins: number, percentileRank: number}) => {
     return (
-    <div className="rounded-xl bg-[#2c2a4a] p-6 text-white space-y-4">
+    <div className="rounded-xl bg-[#1a2332] p-6 text-white space-y-4">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold">Growth Coins</h3>
         <p className="text-xl text-yellow-400 font-semibold">{props.totalCoins}</p>

@@ -16,25 +16,35 @@ const signUpFormSchema = z.object({
     .string()
     .min(8, "Password has to be a minimum of 8 characters")
     .max(20),
+  agreeToTerms: z.literal(true, {
+    errorMap: () => ({ message: "You must agree to the Terms and Conditions" }),
+  }),
 });
 
 type signUpFormType = z.infer<typeof signUpFormSchema>;
 
 const SignupForm = () => {
-
   const signupMutation = useMutation({
-    mutationFn: async (data: {email: string, pass: string, username: string}) => {
-      return await signupWithEmailPass({email: data.email, pass: data.pass, username: data.username})
-    }, 
+    mutationFn: async (data: {
+      email: string;
+      pass: string;
+      username: string;
+    }) => {
+      return await signupWithEmailPass({
+        email: data.email,
+        pass: data.pass,
+        username: data.username,
+      });
+    },
     onSuccess: (userData: userType) => {
-      useAuthStore.getState().setUser(userData)
-      toast.success("Signup successfull")
+      useAuthStore.getState().setUser(userData);
+      toast.success("Signup successfull");
     },
     onError: (err) => {
       console.error("Signup error", err);
-      toast.error("Some error occured")
+      toast.error("Some error occured");
     },
-  })
+  });
 
   const {
     register,
@@ -45,19 +55,58 @@ const SignupForm = () => {
   });
 
   const onSubmit = (data: signUpFormType) => {
-    signupMutation.mutate(data)   
+    signupMutation.mutate(data);
   };
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input {...register("username")} placeholder="Name" />
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <input
+        {...register("username")}
+        type="text"
+        placeholder="Full name"
+        className="w-full px-4 py-2 rounded-lg bg-[#1e293b] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-600"
+      />
       {errors.username && <p>{errors.username.message}</p>}
-      <input {...register("email")} placeholder="Email" />
+      <input
+        {...register("email")}
+        type="email"
+        placeholder="Email address"
+        className="w-full px-4 py-2 rounded-lg bg-[#1e293b] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-600"
+      />
       {errors.email && <p>{errors.email.message}</p>}
-      <input {...register("pass")} placeholder="Password" />
+      <input
+        {...register("pass")}
+        type="password"
+        placeholder="Password"
+        className="w-full px-4 py-2 rounded-lg bg-[#1e293b] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-600"
+      />
       {errors.pass && <p>{errors.pass.message}</p>}
-      <button type="submit">Signup</button>
-      {/* <input {...register("name")} placeholder="Habit name" />
-      {errors.name && <p>{errors.name.message}</p>} */}
+
+      {/* Terms checkbox */}
+      <div className="flex items-center text-sm text-gray-400">
+        <input
+          {...register("agreeToTerms")}
+          type="checkbox"
+          id="terms"
+          className="mr-2"
+        />
+        <label htmlFor="terms">
+          I agree to the{" "}
+          <a href="#" className="text-blue-400 underline">
+            Terms of Service
+          </a>{" "}
+          and{" "}
+          <a href="#" className="text-blue-400 underline">
+            Privacy Policy
+          </a>
+        </label>
+      </div>
+
+      <button
+        type="submit"
+        className="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition"
+      >
+        Create Account
+      </button>
     </form>
   );
 };

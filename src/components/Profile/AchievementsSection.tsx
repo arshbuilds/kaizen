@@ -40,7 +40,7 @@ const AchievementsSection = ({
   ];
 
   return (
-    <div className="rounded-xl bg-[#2c2a4a] p-6 text-white">
+    <div className="rounded-xl bg-[#1a2332] p-6 text-white">
       <h3 className="text-lg font-semibold mb-4">Achievements & Streaks</h3>
       <div className="flex flex-row gap-4">
         {items.map((item, index) => (

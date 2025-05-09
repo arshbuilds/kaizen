@@ -47,6 +47,7 @@ export const useUserData = () => {
               dayStreak: data.dayStreak,
               meditationHours: data.meditationHours,
               badgesCount: data.badgesCount,
+              bestStreak: data.bestStreak,
               totalCoins: data.totalCoins,
               weeklyCoins: data.weeklyCoins,
               todayCoins: data.todayCoins,
@@ -60,7 +61,7 @@ export const useUserData = () => {
         }
       } else {
         setUser(null);
-        router.push("/login");
+        router.push("/enter");
       }
 
       setHasFetchedUser(true);

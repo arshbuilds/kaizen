@@ -19,7 +19,7 @@ type userProps = {
 const UserData = ({ pfpUrl, createdAt, interests, followers, following, goals }: userProps) => {
   const year = getYearFromTimestamp(createdAt);
   return (
-    <div className="rounded-xl my-4 bg-[#2c2a4a] p-6 text-white">
+    <div className="rounded-xl my-4 bg-[#1a2332] p-6 text-white">
       <span className="text-gray-400 text-sm">
       <Link href={'/'} className="absolute left-10 top-10 flex items-center gap-1"><FaArrowLeft/>Back</Link></span>
       <div className="flex flex-col items-center">

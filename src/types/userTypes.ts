@@ -38,10 +38,13 @@ export type userType = {
   wellbeingScore: number;
   wellbeingDelta: number;  // in percent
 
+
+
   // Achievements
   dayStreak: number;
   meditationHours: number; // in hours
   badgesCount: number;
+  bestStreak: number;
 
   // Coins & Ranking
   totalCoins: number;

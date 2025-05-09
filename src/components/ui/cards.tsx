@@ -11,7 +11,7 @@ export const DailyStatCard = (props: {
   hourDelta?: number;
 }) => {
   return (
-    <div className="flex-1 rounded-xl bg-[#2c2a4a] p-4 text-white">
+    <div className="flex-1 rounded-xl bg-[#1a2332] p-4 text-white">
       <div className="flex flex-col items-center">
         <div className="flex items-center">
           <div className="flex-shrink-0 bg-gradient-to-br from-pink-500 to-pink-600 p-2 rounded-full">
@@ -79,6 +79,38 @@ export const AchievementsCard = (props: {
         {props.isTime ? "h" : ""}
       </p>
       <p className="text-xs text-center text-gray-300">{props.label}</p>
+    </div>
+  );
+};
+
+export const ProgressCard = ({
+  unit,
+  Icon,
+  title,
+  cardValue,
+  iconColor,
+}: {
+  info: string;
+  unit: string;
+  Icon: IconType;
+  title: string;
+  cardValue: number;
+  iconColor: string;
+}) => {
+  return (
+    <div className="flex-1 rounded-xl bg-[#1a2332] p-4 text-white">
+      <p className="text-sm text-gray-400 mb-2">{title}</p>
+      <div className="flex flex-col items-start justify-between">
+        <div className="flex items-baseline gap-1">
+          <span className="text-xl font-bold text-indigo-400">
+            {cardValue}
+          </span>
+          {unit && <span className="text-base font-semibold">{unit}</span>}
+        </div>
+        <div className="text-xl">
+          <Icon style={{ color: iconColor }} />
+        </div>
+      </div>
     </div>
   );
 };

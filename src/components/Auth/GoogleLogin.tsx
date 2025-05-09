@@ -3,6 +3,7 @@ import { useAuthStore } from "@/src/stores/useAuthStore";
 import { userType } from "@/src/types/userTypes";
 import { useMutation } from "@tanstack/react-query";
 import React from "react";
+import { FaGoogle } from "react-icons/fa";
 import { toast } from "sonner";
 
 const GoogleLogin = () => {
@@ -20,10 +21,20 @@ const GoogleLogin = () => {
     },
   });
 
-  const onSubmit = () => {
+  const handleSubmit = () => {
     googleMutation.mutate();
   };
-  return <button onClick={onSubmit}>GoogleLogin</button>;
+  return (
+    <div className="flex justify-center gap-4">
+      <button
+        onSubmit={handleSubmit}
+        className="flex items-center gap-2 px-4 py-2 bg-[#1e293b] text-white rounded-lg text-sm"
+      >
+        <FaGoogle />
+        Google
+      </button>
+    </div>
+  );
 };
 
 export default GoogleLogin;

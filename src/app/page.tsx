@@ -21,6 +21,7 @@ export default function Home() {
         <HabitTaskItemMapper />
         <CreateNewHabitPopup />
         <Link href={'/profile'}>profile</Link>
+        <Link href={'/progress'}>progress</Link>
         <LogoutButton/>
       </AuthGate>
     </div>

@@ -7,6 +7,7 @@ import { useAuthStore } from "@/src/stores/useAuthStore";
 import React from "react";
 import { FaBrain, FaHeartbeat } from "react-icons/fa";
 
+// TODO:- continue later
 const Profile = () => {
   const { user, loading } = useAuthStore();
 

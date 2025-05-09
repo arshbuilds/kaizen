@@ -48,14 +48,28 @@ const LoginForm = () => {
   }
 
   return(
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input {...register("email")} placeholder="Email" />
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <input
+        {...register("email")}
+        type="text"
+        placeholder="Full name"
+        className="w-full px-4 py-2 rounded-lg bg-[#1e293b] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-600"
+      />
       {errors.email && <p>{errors.email.message}</p>}
-      <input {...register("pass")} placeholder="Password" />
+      <input
+        {...register("pass")}
+        type="password"
+        placeholder="Password"
+        className="w-full px-4 py-2 rounded-lg bg-[#1e293b] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-600"
+      />
       {errors.pass && <p>{errors.pass.message}</p>}
-      <button type="submit">Login</button>
-      {/* <input {...register("name")} placeholder="Habit name" />
-      {errors.name && <p>{errors.name.message}</p>} */}
+
+      <button
+        type="submit"
+        className="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition"
+      >
+        Create Account
+      </button>
     </form>
   );
 };
