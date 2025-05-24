@@ -1,11 +1,11 @@
 import React from "react";
-import { todoType } from "../../types/todoTypes";
+import { todoOutputType } from "../../types/todoTypes";
 import { DeleteButton, ToggleButton } from "./TaskButtons";
 import { habitType } from "@/src/types/habitTypes";
 import { useAuth } from "@/src/hooks/useAuth";
 
-export const TodoTaskItem = ({ data }: { data: todoType }) => {
-  const { title, status, goalId, type, todoId } = data;
+export const TodoTaskItem = ({ data, goalId, dueBy}: { data: todoOutputType, goalId: string , dueBy: string}) => {
+  const { title, status, description, priority, todoId } = data;
   const { user } = useAuth();
   return (
     <div>
@@ -14,15 +14,15 @@ export const TodoTaskItem = ({ data }: { data: todoType }) => {
         completionStatus={status}
         userId={user!.userId}
         goalId={goalId}
-        todoType={type}
+        dueBy={dueBy}
         todoId={todoId}
       />
-      {title}
+      {title}, {description}, {priority}
       <DeleteButton
         taskType="todo"
         userId={user!.userId}
         goalId={goalId}
-        todoType={type}
+        dueBy={dueBy}
         todoId={todoId}
       />
     </div>

@@ -6,7 +6,7 @@ import {
 } from "@/src/services/habitServices";
 import { deleteTodoByUser, updateTodoByUser } from "@/src/services/todoServices";
 import { habitType } from "@/src/types/habitTypes";
-import { todoType } from "@/src/types/todoTypes";
+import { todoOutputType } from "@/src/types/todoTypes";
 import { wasCompletedYesterday } from "@/src/utils/dateTimeUtils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { serverTimestamp } from "firebase/firestore";
@@ -17,7 +17,7 @@ type ToggleButtonProps = {
   completionStatus: boolean;
   userId: string;
   goalId?: string;
-  todoType?: string;
+  dueBy?: string;
   todoId?: string;
   habitId?: string;
   streak?: number;
@@ -29,14 +29,14 @@ export const ToggleButton = ({
   completionStatus,
   userId,
   goalId,
-  todoType,
+  dueBy,
   todoId,
   habitId,
   streak,
   lastCompleted,
 }: ToggleButtonProps) => {
   const queryClient = useQueryClient();
-  const queryKey = taskType === "habit" ? `habits` : `${todoType}-todos`;
+  const queryKey = taskType === "habit" ? `habits` : `${dueBy}-todos`;
   const toggleTaskMutation = useMutation({
     mutationFn: async (newStatus: boolean) => {
       if (taskType === "habit" && habitId && lastCompleted) {
@@ -55,25 +55,23 @@ export const ToggleButton = ({
           habitId
         );
       }
-      if (taskType === "todo" && goalId && todoType && todoId) {
+      if (taskType === "todo" && goalId && dueBy && todoId) {
         return await updateTodoByUser(
           { status: newStatus },
           userId,
           goalId,
-          todoType,
+          dueBy,
           todoId
         );
       }
     },
     onMutate: async (newStatus) => {
       await queryClient.cancelQueries({ queryKey: [queryKey] });
-
       const previousTasks = queryClient.getQueryData([queryKey]);
       if (taskType === "todo") {
-        queryClient.setQueryData([queryKey], (old: Array<todoType>) => {
+        queryClient.setQueryData([queryKey], (old: Array<todoOutputType>) => {
           if (!old) return old;
-
-          return old.map((todo: todoType) =>
+          return old.map((todo: todoOutputType) =>
             todo.todoId === todoId ? { ...todo, status: newStatus } : todo
           );
         });
@@ -122,7 +120,7 @@ type DeleteButtonProps = {
   taskType: "habit" | "todo";
   userId: string;
   goalId?: string;
-  todoType?: string;
+  dueBy?: string;
   todoId?: string;
   habitId?: string;
 };
@@ -132,18 +130,18 @@ export const DeleteButton = ({
   userId,
   goalId,
   todoId,
-  todoType,
+  dueBy,
   habitId,
 }: DeleteButtonProps) => {
   const queryClient = useQueryClient();
-  const queryKey = taskType === "habit" ? `habits` : `${todoType}-todos`;
+  const queryKey = taskType === "habit" ? `habits` : `${dueBy}-todos`;
   const deleteTaskMutation = useMutation({
     mutationFn: async () => {
       if (taskType === "habit" && habitId) {
         return await deletehabitByUser(userId, habitId);
       }
-      if (taskType === "todo" && goalId && todoType && todoId) {
-        return await deleteTodoByUser(userId, goalId, todoType, todoId);
+      if (taskType === "todo" && goalId && dueBy && todoId) {
+        return await deleteTodoByUser(userId, goalId, dueBy, todoId);
       }
     },
     onMutate: async () => {
@@ -151,9 +149,9 @@ export const DeleteButton = ({
 
       const previousTasks = queryClient.getQueryData([queryKey]);
       if (taskType === "todo") {
-        queryClient.setQueryData([queryKey], (old: Array<todoType>) => {
+        queryClient.setQueryData([queryKey], (old: Array<todoOutputType>) => {
           if (!old) return old;
-          return old.filter((todo: todoType) => todo.todoId !== todoId)
+          return old.filter((todo: todoOutputType) => todo.todoId !== todoId)
         });
       }
       if (taskType === "habit") {
@@ -184,8 +182,6 @@ export const DeleteButton = ({
       disabled={deleteTaskMutation.isPending}
     >
       Delete
-      {/* {completionStatus ? <h1>done</h1> : <h2>not done</h2>} */}
-      {/* toggle {streak} */}
     </button>
   );
 };

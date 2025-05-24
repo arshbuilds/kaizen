@@ -1,5 +1,4 @@
 import { habitType } from "../types/habitTypes";
-import { todoType } from "../types/todoTypes";
 
 export const getHabitProgress = (data: Array<habitType>) => {
     const total = data.length;
@@ -29,3 +28,4 @@ export const getTodayProgress = (habits: Array<habitType>, todos: Array<todoType
 
     return (doneTasks/totalTasks)*100;
 }
+

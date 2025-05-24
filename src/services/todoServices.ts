@@ -1,40 +1,32 @@
-import { kebabCase } from "lodash";
 import {
   addUserTodo,
   deleteUserTodo,
   getUserTodosData,
   updateUserTodo,
 } from "../repositories/todoRepos";
-import { partialTodoType, todoType } from "../types/todoTypes";
-import { serverTimestamp, Timestamp } from "firebase/firestore";
+import { partialtodoOutputType, todoInputType, todoOutputType } from "../types/todoTypes";
 
 export const addTodoByUser = async (
-  formData: partialTodoType,
+  formData: todoOutputType,
   userId: string,
   goalId: string,
-  dueBy: Date
+  dueBy: string
 ) => {
   try {
     if (
       formData.title &&
       formData.description &&
-      formData.priority &&
-      formData.type
+      formData.priority
     ) {
       if (!formData.title.trim()) throw new Error("Title cannot be empty");
 
-      const data: todoType = {
-        todoId: kebabCase(formData.title),
-        goalId: goalId,
+      const data: todoInputType = {
         title: formData?.title,
         description: formData.description,
-        dueDate: dueBy ? Timestamp.fromDate(dueBy) : serverTimestamp(),
         status: false,
         priority: formData.priority,
-        createdAt: serverTimestamp(),
-        type: formData.type,
       };
-      await addUserTodo({ data, userId });
+      await addUserTodo({ data, userId, goalId, dueBy});
     }
   } catch (e) {
     console.error("Login failed:", e);
@@ -45,25 +37,24 @@ export const addTodoByUser = async (
 export const getTodosByUser = async (
   userId: string,
   goalId: string,
-  type: string,
-  timeRange: "today" | "all"
+  dueBy: string
 ) => {
-  const docData = await getUserTodosData({ userId, goalId, type, timeRange });
+  const docData = await getUserTodosData({ userId, goalId, dueBy});
   //TODO:- filter by priority
   return docData;
 };
 
 export const updateTodoByUser = async (
-  data: partialTodoType,
+  data: partialtodoOutputType,
   userId: string,
   goalId: string,
-  todoType: string,
+  dueBy: string,
   todoId: string
 ) => {
   try {
-    await updateUserTodo({ data, userId, goalId, todoType, todoId });
+    await updateUserTodo({ data, userId, goalId, dueBy, todoId });
   } catch (e) {
-    console.error("Login failed:", e);
+    console.error("Some error occured:", e);
     throw e;
   }
 };
@@ -71,11 +62,11 @@ export const updateTodoByUser = async (
 export const deleteTodoByUser = async (
   userId: string,
   goalId: string,
-  todoType: string,
+  dueBy: string,
   todoId: string
 ) => {
   try {
-    await deleteUserTodo({ userId, goalId, todoType, todoId });
+    await deleteUserTodo({ userId, goalId, dueBy, todoId });
   } catch (e) {
     console.error("Login failed:", e);
     throw e;

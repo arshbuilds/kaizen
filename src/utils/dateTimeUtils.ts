@@ -1,7 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 import { FirestoreTimestamp } from "../lib/firebase";
 
-
 function convertToDate(value: FirestoreTimestamp): Date | null {
   if (value instanceof Timestamp) return value.toDate();
   if (value instanceof Date) return value;
@@ -33,4 +32,32 @@ export function getStartAndEndOfToday() {
   const end = new Date(start);
   end.setDate(start.getDate() + 1);
   return { start, end };
+}
+
+
+export function getNextWeekdayDate(weekday: string, weekOffset = 0): Date {
+  const dayMap: Record<string, number> = {
+    sunday: 0,
+    monday: 1,
+    tuesday: 2,
+    wednesday: 3,
+    thursday: 4,
+    friday: 5,
+    saturday: 6,
+  };
+
+  const targetDay = dayMap[weekday.toLowerCase()];
+  const today = new Date();
+  const day = today.getDay();
+
+  let diff = (targetDay + 7 - day) % 7;
+  if (diff === 0) diff = 7; // Always go to next week, not today
+
+  const targetDate = new Date(today);
+  targetDate.setDate(today.getDate() + diff + weekOffset * 7);
+  return targetDate;
+}
+
+export function formatDate(date: Date): string {
+  return date.toISOString().split("T")[0]; // YYYY-MM-DD
 }

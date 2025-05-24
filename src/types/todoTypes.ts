@@ -1,15 +1,23 @@
 import { FirestoreTimestamp } from "../lib/firebase";
 
-export type todoType = {
+export type todoOutputType = {
     todoId: string;
-    goalId: string;
     title: string;
     description: string;
-    dueDate: FirestoreTimestamp; 
     status: boolean;
     priority: string;
+}
+
+export type todoInputType = {
+    title: string;
+    description: string;
+    status: boolean;
+    priority: string;
+}
+
+export type todoParentType = {
     createdAt: FirestoreTimestamp; 
-    type: string
+    dueDate: FirestoreTimestamp; 
 };
 
-export type partialTodoType = Partial<todoType>
+export type partialtodoOutputType = Partial<todoOutputType>

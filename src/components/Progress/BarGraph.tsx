@@ -21,7 +21,6 @@ type Props = {
 const BarGraph = ({ data }: Props) => {
   const endDate = new Date();
   const { weekdays, completionRate } = modifyForBarGraph(data, endDate);
-  console.log(weekdays, completionRate);
 
   const barData = {
     labels: weekdays,

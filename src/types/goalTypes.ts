@@ -4,9 +4,8 @@ export type goalType = {
     goalId: string;
     title: string;
     description: string;
-    status: string;
     createdAt: FirestoreTimestamp;
-    dueBy: FirestoreTimestamp;
+    weeks: number;
     tags: Array<string>;
 }
 

@@ -11,19 +11,17 @@ import Loading from "../Loading/Loading";
 
 type todoTaskItemMapperProps = {
   goalId: string;
-  type: string;
-  timeRange: "today"| "all"
 };
 export const TodoTaskItemMapper = ({
   goalId,
-  type,
-  timeRange
 }: todoTaskItemMapperProps) => {
+  const now = new Date()
+  const dueBy = now.toISOString().slice(0,10)
   const {user} = useAuth()
   const { isPending, isError, data, error } = useQuery({
-    queryKey: [`${type}-todos`],
+    queryKey: [`${dueBy}-todos`],
     queryFn: async () => {
-      const data = await getTodosByUser(user!.userId, goalId, type, timeRange);
+      const data = await getTodosByUser(user!.userId, goalId, "2025-05-26");
       return data;
     },
   });
@@ -39,7 +37,7 @@ export const TodoTaskItemMapper = ({
   return (
     <ul>
       {data.map((todo, index) => (
-        <TodoTaskItem key={index} data={todo} />
+        <TodoTaskItem key={index} data={todo} dueBy={"2025-05-26"} goalId={goalId} />
       ))}
     </ul>
   );
