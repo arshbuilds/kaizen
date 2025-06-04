@@ -10,6 +10,7 @@ import { useAuthStore } from "../stores/useAuthStore";
 import { addNewUser } from "../repositories/authRepos";
 import { doc, getDoc, serverTimestamp } from "firebase/firestore";
 import { userType } from "../types/userTypes";
+import { addGoalByUser } from "./goalServices";
 
 const provider = new GoogleAuthProvider();
 
@@ -30,6 +31,7 @@ export const loginWithGoogle = async (): Promise<userType> => {
         role: data.role,
         interests: data.interests,
         createdAt: data.createdAt,
+        goals: data.goals,
         followersCount: data.followersCount,
         followingCount: data.followingCount,
         goalsCount: data.goalsCount,
@@ -56,6 +58,7 @@ export const loginWithGoogle = async (): Promise<userType> => {
         role: "",
         interests: [],
         createdAt: serverTimestamp(),
+        goals: ["general"],
         followersCount: 0,
         followingCount: 0,
         goalsCount: 0,
@@ -73,6 +76,13 @@ export const loginWithGoogle = async (): Promise<userType> => {
         percentileRank: 0,
       };
       await addNewUser(userData);
+      await addGoalByUser({
+        userId: user.uid,
+        title: "general",
+        tags: "general",
+        description: "General Todos",
+        weeks: 0,
+      });
       return userData;
     }
   } catch (e) {
@@ -102,6 +112,7 @@ export const signupWithEmailPass = async ({
       role: "",
       interests: [],
       createdAt: serverTimestamp(),
+      goals: ["general"],
       followersCount: 0,
       followingCount: 0,
       goalsCount: 0,
@@ -119,6 +130,13 @@ export const signupWithEmailPass = async ({
       percentileRank: 0,
     };
     await addNewUser(userData);
+    await addGoalByUser({
+      userId: user.uid,
+      title: "general",
+      tags: "general",
+      description: "General Todos",
+      weeks: 0,
+    });
     return userData;
   } catch (e) {
     console.error("Login failed:", e);
@@ -148,6 +166,7 @@ export const loginWithEmailPass = async ({
         role: data.role,
         interests: data.interests,
         createdAt: data.createdAt,
+        goals: data.goals,
         followersCount: data.followersCount,
         followingCount: data.followingCount,
         goalsCount: data.goalsCount,

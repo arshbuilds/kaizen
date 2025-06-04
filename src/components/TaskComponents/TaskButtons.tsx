@@ -4,18 +4,23 @@ import {
   deletehabitByUser,
   updateHabitByUser,
 } from "@/src/services/habitServices";
-import { deleteTodoByUser, updateTodoByUser } from "@/src/services/todoServices";
+import {
+  deleteTodoByUser,
+  updateTodoByUser,
+} from "@/src/services/todoServices";
 import { habitType } from "@/src/types/habitTypes";
 import { todoOutputType } from "@/src/types/todoTypes";
 import { wasCompletedYesterday } from "@/src/utils/dateTimeUtils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { serverTimestamp } from "firebase/firestore";
+import { FaRegTrashAlt } from "react-icons/fa";
 import { toast } from "sonner";
 
 type ToggleButtonProps = {
   taskType: "habit" | "todo";
   completionStatus: boolean;
   userId: string;
+  queryKey: string;
   goalId?: string;
   dueBy?: string;
   todoId?: string;
@@ -29,6 +34,7 @@ export const ToggleButton = ({
   completionStatus,
   userId,
   goalId,
+  queryKey,
   dueBy,
   todoId,
   habitId,
@@ -36,8 +42,8 @@ export const ToggleButton = ({
   lastCompleted,
 }: ToggleButtonProps) => {
   const queryClient = useQueryClient();
-  const queryKey = taskType === "habit" ? `habits` : `${dueBy}-todos`;
   const toggleTaskMutation = useMutation({
+    mutationKey: ["toggle-task"],
     mutationFn: async (newStatus: boolean) => {
       if (taskType === "habit" && habitId && lastCompleted) {
         const currentStreak =
@@ -65,7 +71,7 @@ export const ToggleButton = ({
         );
       }
     },
-    onMutate: async (newStatus) => {
+   onMutate: async (newStatus) => {
       await queryClient.cancelQueries({ queryKey: [queryKey] });
       const previousTasks = queryClient.getQueryData([queryKey]);
       if (taskType === "todo") {
@@ -79,7 +85,6 @@ export const ToggleButton = ({
       if (taskType === "habit") {
         queryClient.setQueryData([queryKey], (old: Array<habitType>) => {
           if (!old) return old;
-
           return old.map((habit: habitType) =>
             habit.habitId === habitId
               ? {
@@ -98,6 +103,8 @@ export const ToggleButton = ({
       if (context?.previousTasks) {
         queryClient.setQueryData([queryKey], context.previousTasks);
       }
+      console.error(_err);
+      throw _err;
     },
 
     onSettled: () => {
@@ -105,13 +112,19 @@ export const ToggleButton = ({
     },
   });
 
+  const onClick = () => {
+    toggleTaskMutation.mutate(!completionStatus);
+  };
   return (
     <button
-      className="text-black bg-white"
-      onClick={() => toggleTaskMutation.mutate(!completionStatus)}
+      className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
+        completionStatus ? "border-blue-500" : "border-gray-400"
+      }`}
+      onClick={onClick}
     >
-      {completionStatus ? <h1>done</h1> : <h2>not done</h2>}
-      toggle {streak}
+      {completionStatus && (
+        <div className="w-2.5 h-2.5 rounded-full bg-blue-500" />
+      )}
     </button>
   );
 };
@@ -119,6 +132,7 @@ export const ToggleButton = ({
 type DeleteButtonProps = {
   taskType: "habit" | "todo";
   userId: string;
+  queryKey: string;
   goalId?: string;
   dueBy?: string;
   todoId?: string;
@@ -128,13 +142,13 @@ type DeleteButtonProps = {
 export const DeleteButton = ({
   taskType,
   userId,
+  queryKey,
   goalId,
   todoId,
   dueBy,
   habitId,
 }: DeleteButtonProps) => {
   const queryClient = useQueryClient();
-  const queryKey = taskType === "habit" ? `habits` : `${dueBy}-todos`;
   const deleteTaskMutation = useMutation({
     mutationFn: async () => {
       if (taskType === "habit" && habitId) {
@@ -146,7 +160,6 @@ export const DeleteButton = ({
     },
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: [queryKey] });
-
       const previousTasks = queryClient.getQueryData([queryKey]);
       if (taskType === "todo") {
         queryClient.setQueryData([queryKey], (old: Array<todoOutputType>) => {
@@ -171,17 +184,16 @@ export const DeleteButton = ({
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: [queryKey] });
-      toast.success("Task deleted successfully")
+      toast.success("Task deleted successfully");
     },
   });
 
   return (
     <button
-      className="text-black bg-yellow-600"
       onClick={() => deleteTaskMutation.mutate()}
       disabled={deleteTaskMutation.isPending}
     >
-      Delete
+      <FaRegTrashAlt />
     </button>
   );
 };

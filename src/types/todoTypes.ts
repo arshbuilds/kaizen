@@ -6,6 +6,7 @@ export type todoOutputType = {
     description: string;
     status: boolean;
     priority: string;
+    goalId: string;
 }
 
 export type todoInputType = {

@@ -42,8 +42,7 @@ export const getUserTodosData = async (params: getUserTodoParams) => {
  
   const snapshot = await getDocs(collectionRef);
   snapshot.forEach((doc) => {
-    
-    data.push({todoId: doc.id, ...doc.data() } as todoOutputType);
+    data.push({todoId: doc.id, goalId: params.goalId, ...doc.data() } as todoOutputType);
   });
   return data;
 };

@@ -1,7 +1,6 @@
 import { FirestoreTimestamp } from "../lib/firebase";
 
-export type goalType = {
-    goalId: string;
+export type goalInputType = {
     title: string;
     description: string;
     createdAt: FirestoreTimestamp;
@@ -9,3 +8,11 @@ export type goalType = {
     tags: Array<string>;
 }
 
+export type goalOutputType = {
+   goalId: string;
+    title: string;
+    description: string;
+    createdAt: FirestoreTimestamp;
+    weeks: number;
+    tags: Array<string>;
+}

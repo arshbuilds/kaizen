@@ -8,7 +8,6 @@ import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/src/hooks/useAuth";
 import { getTasksFromPrompt } from "@/src/services/ai/getTasks";
 import { addGoalByUser, uploadTasksForGoals } from "@/src/services/goalServices";
-import { kebabCase } from "lodash";
 
 const habitSchema = z.object({
   title: z.string().min(1, "Please enter a valid title"),
@@ -41,7 +40,7 @@ const GetTodosFromPrompt = () => {
         description: data.description,
         weeks: data.weeks,
       });
-      await uploadTasksForGoals(tasks, user!.userId, kebabCase(data.title));
+      await uploadTasksForGoals(tasks, user!.userId, data.title);
     },
   });
 

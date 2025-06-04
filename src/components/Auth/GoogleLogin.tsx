@@ -27,11 +27,11 @@ const GoogleLogin = () => {
   return (
     <div className="flex justify-center gap-4">
       <button
-        onSubmit={handleSubmit}
+        onClick={handleSubmit}
         className="flex items-center gap-2 px-4 py-2 bg-[#1e293b] text-white rounded-lg text-sm"
       >
         <FaGoogle />
-        Google
+        Google  
       </button>
     </div>
   );

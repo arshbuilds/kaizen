@@ -1,6 +1,5 @@
 import React from 'react'
 
-// type Props = {}
 
 const GrowthCoinsSection = (props: {totalCoins: number, weeklyCoins: number, todayCoins: number, percentileRank: number}) => {
     return (

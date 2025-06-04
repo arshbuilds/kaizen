@@ -11,17 +11,31 @@ type userProps = {
   createdAt: FirestoreTimestamp;
   interests: Array<string>;
   followers: number;
-// type AchievementsProps
+  // type AchievementsProps
   following: number;
   goals: number;
 };
 
-const UserData = ({ pfpUrl, createdAt, interests, followers, following, goals }: userProps) => {
+const UserData = ({
+  pfpUrl,
+  createdAt,
+  interests,
+  followers,
+  following,
+  goals,
+}: userProps) => {
   const year = getYearFromTimestamp(createdAt);
   return (
     <div className="rounded-xl my-4 bg-[#1a2332] p-6 text-white">
       <span className="text-gray-400 text-sm">
-      <Link href={'/'} className="absolute left-10 top-10 flex items-center gap-1"><FaArrowLeft/>Back</Link></span>
+        <Link
+          href={"/"}
+          className="absolute left-10 top-10 flex items-center gap-1"
+        >
+          <FaArrowLeft />
+          Back
+        </Link>
+      </span>
       <div className="flex flex-col items-center">
         {/* Profile Image with Camera Icon */}
         <div className="relative">
@@ -49,7 +63,7 @@ const UserData = ({ pfpUrl, createdAt, interests, followers, following, goals }:
         {/* User Details */}
         <div className="mt-2 flex items-center justify-center space-x-4 text-gray-400">
           <span>{year}</span>
-        </div> 
+        </div>
 
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           {interests.map((string, index) => (
@@ -59,11 +73,15 @@ const UserData = ({ pfpUrl, createdAt, interests, followers, following, goals }:
         {/* Stats */}
         <div className="mt-8 flex w-full justify-between border-t border-gray-700 pt-4">
           <div className="flex flex-col items-center">
-            <span className="text-lg font-semibold text-white">{following}</span>
+            <span className="text-lg font-semibold text-white">
+              {following}
+            </span>
             <span className="text-xs text-gray-400">Following</span>
           </div>
           <div className="flex flex-col items-center">
-            <span className="text-lg font-semibold text-white">{followers}</span>
+            <span className="text-lg font-semibold text-white">
+              {followers}
+            </span>
             <span className="text-xs text-gray-400">Followers</span>
           </div>
           <div className="flex flex-col items-center">

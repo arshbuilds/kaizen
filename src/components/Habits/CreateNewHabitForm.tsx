@@ -15,53 +15,53 @@ const habitSchema = z.object({
 
 type HabitForm = z.infer<typeof habitSchema>;
 
-const CreateNewHabitPopup = () => {
+const CreateNewHabitForm = ({ onClose }: { onClose: () => void }) => {
   const queryClient = useQueryClient();
-  const {user} = useAuth()
+  const { user } = useAuth();
+  const queryKey = "habits";
   const {
     register,
     handleSubmit,
-    formState: { errors },
   } = useForm<HabitForm>({
     resolver: zodResolver(habitSchema),
   });
 
   const addHabitMutation = useMutation({
-    mutationFn: (title: string) =>
-      addHabitByUser({ title }, user!.userId),
+    mutationFn: (title: string) => addHabitByUser({ title }, user!.userId),
     onMutate: async (title) => {
-      await queryClient.cancelQueries({ queryKey: ["habits"] });
-      const prevData = queryClient.getQueryData(["habits"]);
-        queryClient.setQueryData(["habits"], (old: Array<partialHabitType>) => [
-      ...(old || []),
-      {title: title, status: false},
-    ]);
+      await queryClient.cancelQueries({ queryKey: [queryKey] });
+      const prevData = queryClient.getQueryData([queryKey]);
+      queryClient.setQueryData([queryKey], (old: Array<partialHabitType>) => [
+        ...(old || []),
+        { title: title, status: false },
+      ]);
       return { prevData };
     },
     onError: (_err, _newStatus, context) => {
       if (context?.prevData) {
         queryClient.setQueryData(["habits"], context.prevData);
       }
-      toast.error("some error occured")
+      toast.error("some error occured");
     },
-
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["habits"] });
-      toast.success("Habit added")
+      queryClient.invalidateQueries({ queryKey: [queryKey] });
+      toast.success("Habit added");
     },
   });
 
   const onSubmit = (data: HabitForm) => {
     addHabitMutation.mutate(data.title);
+    onClose();
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <input {...register("title")} placeholder="Habit name" />
-      {errors.title && <p>{errors.title.message}</p>}
-      <button disabled={addHabitMutation.isPending} type="submit">Create Habit</button>
+      <button disabled={addHabitMutation.isPending} type="submit">
+        Create Habit
+      </button>
     </form>
   );
 };
 
-export default CreateNewHabitPopup;
+export default CreateNewHabitForm;

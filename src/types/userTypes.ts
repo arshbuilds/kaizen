@@ -27,6 +27,7 @@ export type userType = {
   role: string;
   interests: string[]; // e.g., ["Meditation", "Fitness"]
   createdAt: FirestoreTimestamp;
+  goals: string[];
   // Stats
   followingCount: number;
   followersCount: number;

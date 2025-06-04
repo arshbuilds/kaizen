@@ -52,7 +52,7 @@ const LoginForm = () => {
       <input
         {...register("email")}
         type="text"
-        placeholder="Full name"
+        placeholder="Email"
         className="w-full px-4 py-2 rounded-lg bg-[#1e293b] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-600"
       />
       {errors.email && <p>{errors.email.message}</p>}

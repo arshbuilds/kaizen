@@ -4,10 +4,10 @@ import {
   getUserTodosData,
   updateUserTodo,
 } from "../repositories/todoRepos";
-import { partialtodoOutputType, todoInputType, todoOutputType } from "../types/todoTypes";
+import { partialtodoOutputType, todoInputType} from "../types/todoTypes";
 
 export const addTodoByUser = async (
-  formData: todoOutputType,
+  formData: Omit<todoInputType, "status">,
   userId: string,
   goalId: string,
   dueBy: string

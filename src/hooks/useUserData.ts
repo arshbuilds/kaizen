@@ -37,6 +37,7 @@ export const useUserData = () => {
               role: data.role,
               interests: data.interests,
               createdAt: data.createdAt,
+              goals: data.goals,
               followersCount: data.followersCount,
               followingCount: data.followingCount,
               goalsCount: data.goalsCount,

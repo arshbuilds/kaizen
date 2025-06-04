@@ -1,4 +1,5 @@
 import {
+  arrayUnion,
   collection,
   doc,
   serverTimestamp,
@@ -8,8 +9,9 @@ import {
 import { getUserGoalsData } from "../repositories/goalRepos";
 import { db } from "../lib/firebase";
 import { kebabCase } from "lodash";
-import { goalType } from "../types/goalTypes";
+import { goalOutputType } from "../types/goalTypes";
 import { todoOutputType } from "../types/todoTypes";
+import { getTodosByUser } from "./todoServices";
 
 export const getGoalsByUser = async (userId: string) => {
   const docData = await getUserGoalsData(userId);
@@ -33,7 +35,7 @@ export const addGoalByUser = async ({
   try {
     const goalId = kebabCase(title);
     const docRef = doc(db, `users/${userId}/goals/${goalId}`);
-    const data: goalType = {
+    const data: goalOutputType = {
       goalId,
       title,
       description,
@@ -51,10 +53,10 @@ export const addGoalByUser = async ({
 export const uploadTasksForGoals = async (
   data: Record<string, unknown[]>[], // your array of weekly objects
   userId: string,
-  goalId: string
+  goalTitle: string
 ) => {
   const batch = writeBatch(db);
-
+  const goalId = kebabCase(goalTitle)
   for (const week of data) {
     for (const [dateStr, todos] of Object.entries(week)) {
       // Parent document
@@ -83,5 +85,27 @@ export const uploadTasksForGoals = async (
     }
   }
 
+  batch.update(doc(db, `users/${userId}`), {
+    goals: arrayUnion(goalTitle)
+  })
+
   await batch.commit();
+};
+
+export const getTodaysTasks = async (
+  userId: string,
+  dueBy: string
+) => {
+  try {
+    const goals = await getGoalsByUser(userId);
+    const todos: todoOutputType[] = [];
+    for (const goalDoc of goals) {
+      const data = await getTodosByUser(userId, goalDoc.goalId, dueBy);
+      todos.push(...data);
+    }
+    return todos;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
 };

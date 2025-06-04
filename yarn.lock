@@ -2198,6 +2198,15 @@ formdata-node@^4.3.2:
     node-domexception "1.0.0"
     web-streams-polyfill "4.0.0-beta.3"
 
+framer-motion@^12.15.0:
+  version "12.15.0"
+  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-12.15.0.tgz#6892283fc7967b071f537d6d160ab49e3d5e73ae"
+  integrity sha512-XKg/LnKExdLGugZrDILV7jZjI599785lDIJZLxMiiIFidCsy0a4R2ZEf+Izm67zyOuJgQYTHOmodi7igQsw3vg==
+  dependencies:
+    motion-dom "^12.15.0"
+    motion-utils "^12.12.1"
+    tslib "^2.4.0"
+
 function-bind@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.2.tgz#2c02d864d97f3ea6c8830c464cbd11ab6eab7a1c"
@@ -2854,6 +2863,18 @@ moment@^2.10.2:
   version "2.30.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.30.1.tgz#f8c91c07b7a786e30c59926df530b4eac96974ae"
   integrity sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==
+
+motion-dom@^12.15.0:
+  version "12.15.0"
+  resolved "https://registry.yarnpkg.com/motion-dom/-/motion-dom-12.15.0.tgz#eca7c9d8c28976b8c920f175f92d5288f5a17785"
+  integrity sha512-D2ldJgor+2vdcrDtKJw48k3OddXiZN1dDLLWrS8kiHzQdYVruh0IoTwbJBslrnTXIPgFED7PBN2Zbwl7rNqnhA==
+  dependencies:
+    motion-utils "^12.12.1"
+
+motion-utils@^12.12.1:
+  version "12.12.1"
+  resolved "https://registry.yarnpkg.com/motion-utils/-/motion-utils-12.12.1.tgz#63e28751325cb9d1cd684f3c273a570022b0010e"
+  integrity sha512-f9qiqUHm7hWSLlNW8gS9pisnsN7CRFRD58vNjptKdsqFLpkVnX00TNeD6Q0d27V9KzT7ySFyK1TZ/DShfVOv6w==
 
 ms@^2.0.0, ms@^2.1.1, ms@^2.1.3:
   version "2.1.3"
