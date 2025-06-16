@@ -1,8 +1,6 @@
 import Groq from "groq-sdk";
 import { getNextWeekPrompt, startWeekPrompt } from "./prompts";
 
-//TODO:- cleanupkk
-
 const groq = new Groq({
   apiKey: process.env.NEXT_PUBLIC_GROQ_API_KEY,
   dangerouslyAllowBrowser: true,
@@ -14,7 +12,7 @@ export async function getTasksFromPrompt(prompt: string, weeks: number) {
   returned += chatCompletion.choices[0]?.message?.content || "";
   let latest = returned;
   for (let i = 0; i < weeks - 1; i++) {
-    const next = await getGroqChatCompletion(getNextWeekPrompt(latest));
+    const next = await getGroqChatCompletion(getNextWeekPrompt(latest, i, weeks));
     latest = (next.choices[0]?.message?.content || "")
       .replace(/```.*?\s/, "")
       .replace(/```$/, "")

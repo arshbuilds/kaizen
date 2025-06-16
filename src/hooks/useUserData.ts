@@ -41,10 +41,6 @@ export const useUserData = () => {
               followersCount: data.followersCount,
               followingCount: data.followingCount,
               goalsCount: data.goalsCount,
-              dailyFocusHours: data.dailyFocusHours,
-              dailyFocusDelta: data.dailyFocusDelta,
-              wellbeingScore: data.wellbeingScore,
-              wellbeingDelta: data.wellbeingDelta,
               dayStreak: data.dayStreak,
               meditationHours: data.meditationHours,
               badgesCount: data.badgesCount,
@@ -53,6 +49,7 @@ export const useUserData = () => {
               weeklyCoins: data.weeklyCoins,
               todayCoins: data.todayCoins,
               percentileRank: data.percentileRank,
+              xp: data.xp,
             });
           } else {
             console.warn("No user doc found!");

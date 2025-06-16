@@ -28,17 +28,11 @@ export type userType = {
   interests: string[]; // e.g., ["Meditation", "Fitness"]
   createdAt: FirestoreTimestamp;
   goals: string[];
+
   // Stats
   followingCount: number;
   followersCount: number;
   goalsCount: number;
-
-  // Daily Focus & Wellness
-  dailyFocusHours: number;
-  dailyFocusDelta: number; // in percent
-  wellbeingScore: number;
-  wellbeingDelta: number;  // in percent
-
 
 
   // Achievements
@@ -52,6 +46,7 @@ export type userType = {
   weeklyCoins: number;
   todayCoins: number;
   percentileRank: number; // e.g., "Top 5%"
+  xp: number;
 
   // Metadata
   lastUpdated?: FirestoreTimestamp;

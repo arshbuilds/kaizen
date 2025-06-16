@@ -20,8 +20,10 @@ export const startWeekPrompt = (desc: string) => {
   priority: string;        // "high", "medium", or "low" based on impact  
   createdAt: FirestoreTimestamp;  // Use Firestore serverTimestamp or equivalent  
   type: string;            // Use relevant categories like "study", "tech", "code", etc.  
-  
+  xp: number;
+  coins: coins;
   Do not generate progress checkpoints or adaptive behavior—those will be handled separately.
+  the number of coins and the amount of coins awarded should be in line with the intensity and idfficulty of the task
   the task is
   
   ${desc}
@@ -29,7 +31,7 @@ export const startWeekPrompt = (desc: string) => {
   format it in an array of objects, type nothing except the specified stuff, i wont no bloated stuff, only the important parts    
   group it by days
   add double quotes around the keys so i can praso it as a json object,
-  no edits just send it to me as json 
+  no edits just send it to me as json
   
   {
   2025-05-29: [
@@ -45,11 +47,11 @@ Return all the data such that JSON>parse can be used with the retunned data with
 `;
 };
 
-export const getNextWeekPrompt = (tasks: string) => {
+export const getNextWeekPrompt = (tasks: string, weekNo: number, totalWeeks: number) => {
   return `
   You will act as a continuity-based task generator. I will provide you with a list of to-do tasks for one full week related to a specific goal. The input tasks will be in the exact same structured format as the output below — this format is non-negotiable.
 
-Your job is to generate the tasks for the next week based solely on those input tasks.
+Your job is to generate the tasks for the next week based solely on those input tasks. Remeber that this is week number ${weekNo} out of ${totalWeeks}, the tasks should be in line with weeks done
 
 Requirements for the next week’s tasks:
 
@@ -72,6 +74,8 @@ Generate seven days’ worth of tasks in this exact format (treat as English, no
    status: boolean;         // Set to false by default  
    priority: string;        // "high", "medium", or "low" based on impact  
    type: string;            // Use relevant categories like "study", "tech", "code", etc.  
+   xp: number;
+   coins: number;
 
   the tasks of previous week is provided below
   ${tasks}

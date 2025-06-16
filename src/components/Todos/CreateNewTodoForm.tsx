@@ -34,6 +34,8 @@ const CreateNewTodoForm = ({ onClose }: { onClose: () => void }) => {
           title: data.title,
           description: data.description,
           priority: data.priority,
+          xp: 0,
+          coins: 0,
         },
         user!.userId,
         data.goalId,
@@ -67,7 +69,6 @@ const CreateNewTodoForm = ({ onClose }: { onClose: () => void }) => {
   });
 
   const onSubmit = (data: todoForm) => {
-    console.log(data);
     addTodoMutation.mutate(data);
     onClose();
   };

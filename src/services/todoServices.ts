@@ -25,6 +25,8 @@ export const addTodoByUser = async (
         description: formData.description,
         status: false,
         priority: formData.priority,
+        xp: formData.xp,
+        coins: formData.coins,
       };
       await addUserTodo({ data, userId, goalId, dueBy});
     }

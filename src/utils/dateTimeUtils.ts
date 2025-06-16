@@ -1,7 +1,7 @@
 import { Timestamp } from "firebase/firestore";
 import { FirestoreTimestamp } from "../lib/firebase";
 
-function convertToDate(value: FirestoreTimestamp): Date | null {
+export function convertToDate(value: FirestoreTimestamp): Date | null {
   if (value instanceof Timestamp) return value.toDate();
   if (value instanceof Date) return value;
   return null; // FieldValue cannot be converted to Date

@@ -6,6 +6,8 @@ export type goalInputType = {
     createdAt: FirestoreTimestamp;
     weeks: number;
     tags: Array<string>;
+    totalTodos: number;
+    doneTodos: number;
 }
 
 export type goalOutputType = {
@@ -15,4 +17,6 @@ export type goalOutputType = {
     createdAt: FirestoreTimestamp;
     weeks: number;
     tags: Array<string>;
+    totalTodos: number;
+    doneTodos: number;
 }

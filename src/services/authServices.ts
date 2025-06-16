@@ -35,10 +35,6 @@ export const loginWithGoogle = async (): Promise<userType> => {
         followersCount: data.followersCount,
         followingCount: data.followingCount,
         goalsCount: data.goalsCount,
-        dailyFocusHours: data.dailyFocusHours,
-        dailyFocusDelta: data.dailyFocusDelta,
-        wellbeingScore: data.wellbeingScore,
-        wellbeingDelta: data.wellbeingDelta,
         dayStreak: data.dayStreak,
         meditationHours: data.meditationHours,
         badgesCount: data.badgesCount,
@@ -47,6 +43,7 @@ export const loginWithGoogle = async (): Promise<userType> => {
         weeklyCoins: data.weeklyCoins,
         todayCoins: data.todayCoins,
         percentileRank: data.percentileRank,
+        xp: data.xp,
       };
       return userData;
     } else {
@@ -62,10 +59,6 @@ export const loginWithGoogle = async (): Promise<userType> => {
         followersCount: 0,
         followingCount: 0,
         goalsCount: 0,
-        dailyFocusHours: 0,
-        dailyFocusDelta: 0,
-        wellbeingScore: 0,
-        wellbeingDelta: 0,
         dayStreak: 0,
         meditationHours: 0,
         badgesCount: 0,
@@ -74,6 +67,7 @@ export const loginWithGoogle = async (): Promise<userType> => {
         weeklyCoins: 0,
         todayCoins: 0,
         percentileRank: 0,
+        xp: 0,
       };
       await addNewUser(userData);
       await addGoalByUser({
@@ -82,6 +76,7 @@ export const loginWithGoogle = async (): Promise<userType> => {
         tags: "general",
         description: "General Todos",
         weeks: 0,
+        totalTodos: 0
       });
       return userData;
     }
@@ -116,10 +111,6 @@ export const signupWithEmailPass = async ({
       followersCount: 0,
       followingCount: 0,
       goalsCount: 0,
-      dailyFocusHours: 0,
-      dailyFocusDelta: 0,
-      wellbeingScore: 0,
-      wellbeingDelta: 0,
       dayStreak: 0,
       meditationHours: 0,
       badgesCount: 0,
@@ -128,6 +119,7 @@ export const signupWithEmailPass = async ({
       weeklyCoins: 0,
       todayCoins: 0,
       percentileRank: 0,
+      xp: 0,
     };
     await addNewUser(userData);
     await addGoalByUser({
@@ -170,10 +162,6 @@ export const loginWithEmailPass = async ({
         followersCount: data.followersCount,
         followingCount: data.followingCount,
         goalsCount: data.goalsCount,
-        dailyFocusHours: data.dailyFocusHours,
-        dailyFocusDelta: data.dailyFocusDelta,
-        wellbeingScore: data.wellbeingScore,
-        wellbeingDelta: data.wellbeingDelta,
         dayStreak: data.dayStreak,
         meditationHours: data.meditationHours,
         badgesCount: data.badgesCount,
@@ -182,6 +170,7 @@ export const loginWithEmailPass = async ({
         weeklyCoins: data.weeklyCoins,
         todayCoins: data.todayCoins,
         percentileRank: data.percentileRank,
+        xp: 0,
       };
       return userData;
     } else {

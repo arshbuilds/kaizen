@@ -1,10 +1,14 @@
 export type DailyStats = {
+  date: string;
   doneCount: number;
   notDoneCount: number;
+  productivityScore: number;
+  rating: Rating;  
   taskIdsDone: string[];
   taskIdsMissed: string[];            
   timeSpentByCategory: Record<string, number>; 
-  rating: "low" | "good" | "great";  
+  timeSpentPerTimeOfDay: Record<string, number>;
+  totalTimeSpent: number;
 };
 
 export type MonthStats = {

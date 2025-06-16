@@ -2,10 +2,8 @@
 import AchievementsSection from "@/src/components/Profile/AchievementsSection";
 import GrowthCoinsSection from "@/src/components/Profile/GrowthCoinsSection";
 import UserData from "@/src/components/Profile/UserData";
-import { DailyStatCard } from "@/src/components/ui/cards";
 import { useAuthStore } from "@/src/stores/useAuthStore";
 import React from "react";
-import { FaBrain, FaHeartbeat } from "react-icons/fa";
 
 // TODO:- continue later
 const Profile = () => {
@@ -28,7 +26,7 @@ const Profile = () => {
         goals={user.goalsCount}
       />
       <div className="flex flex-row gap-4">
-        <DailyStatCard
+        {/* <DailyStatCard
           icon={FaBrain}
           title="Daily Focus"
           hours={user.dailyFocusHours}
@@ -39,7 +37,7 @@ const Profile = () => {
           title="Wellbeing Score"
           score={user.wellbeingScore}
           scoreDelta={user.wellbeingDelta}
-        />
+        /> */}
       </div>
       <AchievementsSection
         dayStreak={user.dayStreak}

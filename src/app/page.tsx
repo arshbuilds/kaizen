@@ -1,19 +1,26 @@
 import React from "react";
 import { AuthGate } from "../components/Auth/AuthGate";
-import Link from "next/link";
-import CreateNewTaskBottomSheet from "../components/TaskComponents/CreateNewTaskBottomSheet";
-import GetTodosFromPrompt from "../components/GoalMaking/GetTodosFromPrompt";
-
+import { TasksGate } from "../components/TaskComponents/TasksGate";
+import DashboardHeader from "../components/Home/DashboardHeader";
+import ProgressCard  from "../components/Home/ProgressCard";
+import HomeTasks  from "../components/Home/HomeTasks";
+import QuickActions  from "../components/Home/QuickActions";
+import TopTasks from "../components/Home/TopTasks";
 
 export default function Home() {
   return (
-    <div>
-      <AuthGate>
-        <Link href={'/profile'}>profile</Link>
-        <Link href={'/progress'}>progress</Link>
-        <GetTodosFromPrompt/>
-        <CreateNewTaskBottomSheet/>
-      </AuthGate>
-    </div>
+    <AuthGate>
+      <TasksGate>
+        <div className="min-h-screen p-4 mx-auto">
+          <div className="space-y-6">
+            <DashboardHeader />
+            <ProgressCard />
+            <TopTasks />
+            <HomeTasks />
+            <QuickActions />
+          </div>
+        </div>
+      </TasksGate>
+    </AuthGate>
   );
 }

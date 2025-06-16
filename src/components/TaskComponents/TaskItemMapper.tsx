@@ -14,8 +14,7 @@ export const TodoTaskItemMapper = ({
   dueBy: string;
 }) => {
   return (
-    <ul className="p-4">
-      <span className="font-bold text-xl text-gray-300">Todo List</span>
+    <ul>
       {data.map((todo, index) => (
         <TodoTaskItem queryKey={queryKey} key={index} data={todo} dueBy={dueBy} />
       ))}
@@ -32,7 +31,6 @@ queryKey,
 }) => {
   return (
     <ul className="p-4">
-      <span className="text-gray-300 font-bold text-xl">Habits</span>
       {data.map((habit, index) => (
         <HabitTaskItem queryKey={queryKey} key={index} data={habit} />
       ))}

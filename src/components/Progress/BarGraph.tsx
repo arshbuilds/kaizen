@@ -14,16 +14,10 @@ import { modifyForBarGraph } from "@/src/utils/genUtils";
 // Register chart elements
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-type Props = {
-  data: MonthStats;
-};
-
-const BarGraph = ({ data }: Props) => {
-  const endDate = new Date();
-  const { weekdays, completionRate } = modifyForBarGraph(data, endDate);
-
+const BarGraph = ({ data }: {data:MonthStats}) => {
+  const { weekDays, completionRate } = modifyForBarGraph(data);
   const barData = {
-    labels: weekdays,
+    labels: weekDays,
     datasets: [
       {
         label: "Weekly Progress",
@@ -69,7 +63,7 @@ const BarGraph = ({ data }: Props) => {
     },
   };
 
-  return <Bar className="bg-[#1a2332] p-4 my-4 rounded-xl" data={barData} options={options} />;
+  return <Bar className="bg-slate-800 border border-purple-400/30 p-4 my-4 rounded-xl" data={barData} options={options} />;
 };
 
 export default BarGraph;

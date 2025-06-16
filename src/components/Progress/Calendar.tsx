@@ -1,71 +1,49 @@
 "use client";
+import React from "react";
 import { MonthStats } from "@/src/types/progressTypes";
-import { getDateGroupsByRating } from "@/src/utils/genUtils";
-import React, { useState } from "react";
-import { DayPicker } from "react-day-picker";
 
 const Calendar = ({
   data,
-  month,
-  year,
 }: {
   data: MonthStats;
   month: number;
   year: number;
 }) => {
-  const ratingGroups = getDateGroupsByRating(data, month, year);
-  const [selectedMonth, setSelectedMonth] = useState(new Date(year, month));
+  const getColor = (doneCount: number, notDoneCount: number) => {
+    const totalTasks = doneCount + notDoneCount;
+    const percentageDone =
+      totalTasks === 0 ? 0 : (doneCount / totalTasks) * 100;
+    if (percentageDone >= 85) return "#50b4d1";
+    if (percentageDone >= 70 && percentageDone < 85) return "#467fa4";
+    if (percentageDone >= 55 && percentageDone < 70) return "#40648d";
+    if (percentageDone >= 40 && percentageDone < 55) return "#3b4976";
+    if (percentageDone < 40) return "#3f3966";
+  };
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center p-4 rounded-xl bg-[#1a2332]">
-      <DayPicker
-        animate
-        mode="single"
-        month={selectedMonth}
-        onMonthChange={setSelectedMonth}
-        modifiers={ratingGroups}
-        modifiersClassNames={{
-          missed: "bg-[#5a2f38] text-white",
-          low: "bg-[#594931] text-white ",
-          good: "bg-[#12433b] text-white",
-          great: "bg-[#087865] text-white",
-        }}
-        classNames={{
-          day: "h-[50px] w-[50px] sm:h-[70px] sm:w-[70px] md:h-[80px] md:w-[80px] text-sm text-center font-medium rounded-lg",
-          day_selected: "bg-blue-500 text-white",
-          day_today: "border border-white",
-          day_outside: "text-gray-400 opacity-50",
-          day_disabled: "opacity-25 cursor-not-allowed",
-          table: "w-full border-separate",
-          tbody: "gap-2", 
-        }}
-        hideNavigation={true}
-        captionLayout={"label"}
-      />
-      <div className="flex w-full justify-evenly my-5">
-        <div>
-          low
-          <span className="mx-2 rounded-xl bg-[#594931] text-[#594931]">
-            ....
-          </span>
+    <div className="w-full h-full flex flex-col items-center justify-center p-4 rounded-xl bg-slate-800 border border-purple-400/30">
+      <div className="grid grid-cols-7 gap-1 w-full h-full">
+        {Object.entries(data).map((day) => (
+          <div
+            key={day[1].date}
+            style={{
+              background: `${getColor(day[1].doneCount, day[1].notDoneCount)}`,
+            }}
+            className={`h-8 w-8 rounded`}
+            title={`${day[1].date}: ${day[1].doneCount} activities`}
+          ></div>
+        ))}
+      </div>
+      <div className="flex w-full justify-between items-center my-5">
+        <span className="text-sm text-gray-500">less</span>
+        <div className="flex w-3/4 justify-evenly">
+         <div className="h-6 w-6 rounded bg-[#3f3966]"></div>
+         <div className="h-6 w-6 rounded bg-[#3b4976]"></div>
+         <div className="h-6 w-6 rounded bg-[#40648d]"></div>
+         <div className="h-6 w-6 rounded bg-[#467fa4]"></div>
+         <div className="h-6 w-6 rounded bg-[#50b4d1]"></div>
+
         </div>
-        <div>
-          good
-          <span className="mx-2 rounded-xl bg-[#12433b] text-[#12433b]">
-            ....
-          </span>
-        </div>
-        <div>
-          great
-          <span className="mx-2 rounded-xl bg-[#087865] text-[#087865]">
-            ....
-          </span>
-        </div>
-        <div>
-          missed
-          <span className="mx-2 rounded-xl bg-[#5a2f38] text-[#5a2f38]">
-            ....
-          </span>
-        </div>
+        <span className="text-sm text-gray-500">more</span>
       </div>
     </div>
   );

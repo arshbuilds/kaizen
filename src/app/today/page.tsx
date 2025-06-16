@@ -1,6 +1,6 @@
 "use client";
 import Loading from "@/src/components/Loading/Loading";
-import CreateNewTaskBottomSheet from "@/src/components/TaskComponents/CreateNewTaskBottomSheet";
+// import CreateNewTaskBottomSheet from "@/src/components/TaskComponents/CreateNewTaskBottomSheet";
 import {
   HabitTaskItemMapper,
   TodoTaskItemMapper,
@@ -10,9 +10,10 @@ import { getTodaysTasks } from "@/src/services/goalServices";
 import { getHabitsByUser } from "@/src/services/habitServices";
 import { formatDate } from "@/src/utils/dateTimeUtils";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useState } from "react";
 
 const Today = () => {
+  const [todoActive, setTodoActive] = useState(true);
   const { user } = useAuth();
   const dueBy = formatDate(new Date());
   const goalsQuery = useQuery({
@@ -36,23 +37,69 @@ const Today = () => {
     return <>Some error occured</>;
   }
 
+  const currentDate = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  });
+
   return (
-    <div>
-      <CreateNewTaskBottomSheet />
-      {goalsQuery.data ? (
-        <TodoTaskItemMapper
-          queryKey={"todos"}
-          data={goalsQuery.data}
-          dueBy={dueBy}
-        />
-      ) : (
-        <>There are no todos left for today</>
-      )}
-      {habitsQuery.data ? (
-        <HabitTaskItemMapper queryKey={"habits"} data={habitsQuery.data} />
-      ) : (
-        <>There are no todos left for today</>
-      )}
+    <div className="min-h-screen p-4 mx-auto">
+      <div className="space-y-6">
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h1 className="text-white text-2xl font-bold">My Tasks</h1>
+            <p className="text-gray-300 text-sm">Today, {currentDate}</p>
+          </div>
+          {/* <button
+            onClick={addTask}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+          >
+            <FaPlus size={16} />
+            Add Task
+          </button> */}
+        </div>
+        <div className="bg-slate-800/30 rounded-xl p-1 mb-6">
+          <div className="flex">
+            <button
+              onClick={() => setTodoActive(true)}
+              className={`flex-1 py-3 px-4 rounded-lg text-sm font-medium transition-all ${
+                todoActive === true
+                  ? "bg-slate-700 text-white shadow-lg"
+                  : "text-gray-400 hover:text-white"
+              }`}
+            >
+              Todos
+            </button>
+            <button
+              onClick={() => setTodoActive(false)}
+              className={`flex-1 py-3 px-4 rounded-lg text-sm font-medium transition-all ${
+                todoActive === false
+                  ? "bg-slate-700 text-white shadow-lg"
+                  : "text-gray-400 hover:text-white"
+              }`}
+            >
+              Habits
+            </button>
+          </div>
+        </div>
+        {/* <CreateNewTaskBottomSheet /> */}
+        {todoActive ? (
+          goalsQuery.data && goalsQuery.data.length !== 0 ? (
+            <TodoTaskItemMapper
+              queryKey={"todos"}
+              data={goalsQuery.data}
+              dueBy={dueBy}
+            />
+          ) : (
+            <>There are no todos left for today</>
+          )
+        ) : habitsQuery.data && habitsQuery.data.length !== 0 ? (
+          <HabitTaskItemMapper queryKey={"habits"} data={habitsQuery.data} />
+        ) : (
+          <>There are no todos left for today</>
+        )}
+      </div>
     </div>
   );
 };

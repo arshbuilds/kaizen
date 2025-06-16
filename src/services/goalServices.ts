@@ -25,12 +25,14 @@ export const addGoalByUser = async ({
   tags,
   description,
   weeks,
+  totalTodos,
 }: {
   userId: string;
   title: string;
   tags: string;
   description: string;
   weeks: number;
+  totalTodos: number;
 }) => {
   try {
     const goalId = kebabCase(title);
@@ -42,6 +44,8 @@ export const addGoalByUser = async ({
       createdAt: serverTimestamp(),
       weeks,
       tags: tags.split(","),
+      totalTodos,
+      doneTodos: 0,
     };
     await setDoc(docRef, data);
   } catch (e) {
@@ -53,10 +57,14 @@ export const addGoalByUser = async ({
 export const uploadTasksForGoals = async (
   data: Record<string, unknown[]>[], // your array of weekly objects
   userId: string,
-  goalTitle: string
+  goalTitle: string,
+  tags: string,
+  description: string,
+  weeks: number
 ) => {
   const batch = writeBatch(db);
-  const goalId = kebabCase(goalTitle)
+  const goalId = kebabCase(goalTitle);
+  let totalTodos = 0;
   for (const week of data) {
     for (const [dateStr, todos] of Object.entries(week)) {
       // Parent document
@@ -81,21 +89,26 @@ export const uploadTasksForGoals = async (
           status: todo.status,
           priority: todo.priority,
         });
+        totalTodos = totalTodos + 1;
       }
     }
   }
 
   batch.update(doc(db, `users/${userId}`), {
-    goals: arrayUnion(goalTitle)
-  })
-
+    goals: arrayUnion(goalTitle),
+  });
+  await addGoalByUser({
+    userId,
+    title: goalTitle,
+    tags,
+    description,
+    weeks,
+    totalTodos,
+  });
   await batch.commit();
 };
 
-export const getTodaysTasks = async (
-  userId: string,
-  dueBy: string
-) => {
+export const getTodaysTasks = async (userId: string, dueBy: string) => {
   try {
     const goals = await getGoalsByUser(userId);
     const todos: todoOutputType[] = [];
