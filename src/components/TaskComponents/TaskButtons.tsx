@@ -1,5 +1,6 @@
 "use client";
 import { FirestoreTimestamp } from "@/src/lib/firebase";
+import { incrementUserXp } from "@/src/services/authServices";
 import {
   deletehabitByUser,
   updateHabitByUser,
@@ -8,7 +9,7 @@ import {
   deleteTodoByUser,
   updateTodoByUser,
 } from "@/src/services/todoServices";
-import { habitType } from "@/src/types/habitTypes";
+import { habitOutputType } from "@/src/types/habitTypes";
 import { todoOutputType } from "@/src/types/todoTypes";
 import { wasCompletedYesterday } from "@/src/utils/dateTimeUtils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -27,6 +28,7 @@ type ToggleButtonProps = {
   habitId?: string;
   streak?: number;
   lastCompleted?: FirestoreTimestamp;
+  timeRequired?: number;
 };
 
 export const ToggleButton = ({
@@ -40,6 +42,7 @@ export const ToggleButton = ({
   habitId,
   streak,
   lastCompleted,
+  timeRequired,
 }: ToggleButtonProps) => {
   const queryClient = useQueryClient();
   const toggleTaskMutation = useMutation({
@@ -51,9 +54,9 @@ export const ToggleButton = ({
             ? streak
             : 0;
         const newStreak = newStatus ? currentStreak + 1 : currentStreak - 1;
+        await incrementUserXp({userId, isIncrementing: newStatus})
         return await updateHabitByUser(
           {
-            status: newStatus,
             streak: newStreak,
             lastCompleted: serverTimestamp(),
           },
@@ -61,17 +64,19 @@ export const ToggleButton = ({
           habitId
         );
       }
-      if (taskType === "todo" && goalId && dueBy && todoId) {
+      if (taskType === "todo" && goalId && dueBy && todoId && timeRequired) {
+        await incrementUserXp({userId, isIncrementing: newStatus})
         return await updateTodoByUser(
           { status: newStatus },
           userId,
           goalId,
           dueBy,
-          todoId
+          todoId,
+          timeRequired
         );
       }
     },
-   onMutate: async (newStatus) => {
+    onMutate: async (newStatus) => {
       await queryClient.cancelQueries({ queryKey: [queryKey] });
       const previousTasks = queryClient.getQueryData([queryKey]);
       if (taskType === "todo") {
@@ -83,9 +88,9 @@ export const ToggleButton = ({
         });
       }
       if (taskType === "habit") {
-        queryClient.setQueryData([queryKey], (old: Array<habitType>) => {
+        queryClient.setQueryData([queryKey], (old: Array<habitOutputType>) => {
           if (!old) return old;
-          return old.map((habit: habitType) =>
+          return old.map((habit: habitOutputType) =>
             habit.habitId === habitId
               ? {
                   ...habit,
@@ -164,13 +169,15 @@ export const DeleteButton = ({
       if (taskType === "todo") {
         queryClient.setQueryData([queryKey], (old: Array<todoOutputType>) => {
           if (!old) return old;
-          return old.filter((todo: todoOutputType) => todo.todoId !== todoId)
+          return old.filter((todo: todoOutputType) => todo.todoId !== todoId);
         });
       }
       if (taskType === "habit") {
-        queryClient.setQueryData([queryKey], (old: Array<habitType>) => {
+        queryClient.setQueryData([queryKey], (old: Array<habitOutputType>) => {
           if (!old) return old;
-          return old.filter((habit: habitType)=> habit.habitId !== habitId)
+          return old.filter(
+            (habit: habitOutputType) => habit.habitId !== habitId
+          );
         });
       }
       return { previousTasks };

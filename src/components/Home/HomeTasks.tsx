@@ -3,9 +3,10 @@ import { FaCalendar } from "react-icons/fa"
 import { SlBookOpen } from "react-icons/sl";
 
 const HomeTasks = () => {
+  
   return (
     <div className="grid grid-cols-2 gap-4">
-      <Card className="bg-slate-800 border-slate-700 p-4">
+      <Card className="bg-[#262636] border-slate-700 p-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
             <FaCalendar className="w-5 h-5 text-green-400" />
@@ -17,7 +18,7 @@ const HomeTasks = () => {
         </div>
       </Card>
 
-      <Card className="bg-slate-800 border-slate-700 p-4">
+      <Card className="bg-[#262636] border-slate-700 p-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
             <SlBookOpen className="w-5 h-5 text-blue-400" />

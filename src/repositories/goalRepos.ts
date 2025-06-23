@@ -11,7 +11,3 @@ export const getUserGoalsData = async (userId: string) => {
   });
   return data;
 };
-
-
-
-

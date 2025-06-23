@@ -1,55 +1,76 @@
 "use client";
+import Loading from "@/src/components/Loading/Loading";
 import AchievementsSection from "@/src/components/Profile/AchievementsSection";
-import GrowthCoinsSection from "@/src/components/Profile/GrowthCoinsSection";
+// import GrowthCoinsSection from "@/src/components/Profile/GrowthCoinsSection";
 import UserData from "@/src/components/Profile/UserData";
+import { getGoalsByUser } from "@/src/services/goalServices";
 import { useAuthStore } from "@/src/stores/useAuthStore";
+import { getProfileStats } from "@/src/utils/taskUtils";
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
 // TODO:- continue later
 const Profile = () => {
   const { user, loading } = useAuthStore();
-
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["goals"],
+    queryFn: async () => {
+      return (await getGoalsByUser(user!.userId)).filter((doc) => {
+        return doc.title !== "general";
+      });
+    },
+  });
+  if (isLoading) {
+    return <Loading />;
+  }
+  if (isError) {
+    return <>Some error occured</>;
+  }
   if (user === null) {
     return <>Please login first</>;
   }
   if (loading) {
     return <>loading</>;
   }
+
+  const {timeSpentInHours, tasksCompleted} = getProfileStats(data!)
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 space-y-6">
-      <UserData
-        pfpUrl={user.pfpUrl}
-        createdAt={user.createdAt}
-        interests={user.interests}
-        followers={user.followersCount}
-        following={user.followingCount}
-        goals={user.goalsCount}
-      />
-      <div className="flex flex-row gap-4">
-        {/* <DailyStatCard
+    <div className="min-h-screen p-4 mx-auto pb-24">
+      <div className="space-y-6">
+        <UserData
+          pfpUrl={user.pfpUrl}
+          createdAt={user.createdAt}
+          interests={user.interests}
+          followers={user.followersCount}
+          following={user.followingCount}
+          goals={user.goalsCount}
+        />
+        <div className="flex flex-row gap-4">
+          {/* <DailyStatCard
           icon={FaBrain}
           title="Daily Focus"
           hours={user.dailyFocusHours}
           hourDelta={user.dailyFocusDelta}
-        />
-        <DailyStatCard
+          />
+          <DailyStatCard
           icon={FaHeartbeat}
           title="Wellbeing Score"
           score={user.wellbeingScore}
           scoreDelta={user.wellbeingDelta}
+          /> */}
+        </div>
+        <AchievementsSection
+          dayStreak={user.dayStreak}
+          timeSpent={timeSpentInHours}
+          tasksCompleted={tasksCompleted}
+        />
+        {/* <GrowthCoinsSection
+          todayCoins={user.todayCoins}
+          totalCoins={user.todayCoins}
+          weeklyCoins={user.weeklyCoins}
+          percentileRank={user.percentileRank}
         /> */}
       </div>
-      <AchievementsSection
-        dayStreak={user.dayStreak}
-        meditationHours={user.meditationHours}
-        badgesCount={user.badgesCount}
-      />
-      <GrowthCoinsSection
-        todayCoins={user.todayCoins}
-        totalCoins={user.todayCoins}
-        weeklyCoins={user.weeklyCoins}
-        percentileRank={user.percentileRank}
-      />
     </div>
   );
 };

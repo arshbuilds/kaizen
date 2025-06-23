@@ -5,12 +5,12 @@ import { GiMeditation } from "react-icons/gi";
 
 const AchievementsSection = ({
   dayStreak,
-  meditationHours,
-  badgesCount,
+  timeSpent,
+  tasksCompleted,
 }: {
   dayStreak: number;
-  meditationHours: number;
-  badgesCount: number;
+  timeSpent: number;
+  tasksCompleted: number;
 }) => {
   const items = [
     {
@@ -23,16 +23,16 @@ const AchievementsSection = ({
     },
     {
       icon: GiMeditation,
-      value: meditationHours,
-      label: "Meditation",
+      value: timeSpent,
+      label: "Time Spent",
       isTime: true,
       iconColor: "#ac9bfb",
       gradient: { from: "#5747a7", to: "#5a46a6" },
     },
     {
       icon: FaMedal,
-      value: badgesCount,
-      label: "Badges",
+      value: tasksCompleted,
+      label: "Tasks Done",
       isTime: false,
       iconColor: "#e4b871",
       gradient: { from: "#714c87", to: "#704c82" },
@@ -41,7 +41,7 @@ const AchievementsSection = ({
 
   return (
     <div className="rounded-xl bg-[#1a2332] p-6 text-white">
-      <h3 className="text-lg font-semibold mb-4">Achievements & Streaks</h3>
+      <h3 className="text-lg font-semibold mb-4">Growth Timeline</h3>
       <div className="flex flex-row gap-4">
         {items.map((item, index) => (
           <AchievementsCard

@@ -1,4 +1,8 @@
-import { partialtodoOutputType, todoInputType, todoOutputType } from "../types/todoTypes";
+import {
+  partialtodoOutputType,
+  todoInputType,
+  todoOutputType,
+} from "../types/todoTypes";
 import {
   collection,
   deleteDoc,
@@ -15,13 +19,15 @@ type addUserTodoParams = {
   data: todoInputType;
   userId: string;
   goalId: string;
-  dueBy: string
+  dueBy: string;
 };
 
 export const addUserTodo = async (params: addUserTodoParams) => {
   const docRef = doc(
     db,
-    `users/${params.userId}/goals/${params.goalId}/tasks/${params.dueBy}/todos/${kebabCase(params.data.title)}`
+    `users/${params.userId}/goals/${params.goalId}/tasks/${
+      params.dueBy
+    }/todos/${kebabCase(params.data.title)}`
   );
   await setDoc(docRef, params.data);
 };
@@ -39,10 +45,14 @@ export const getUserTodosData = async (params: getUserTodoParams) => {
     db,
     `users/${params.userId}/goals/${params.goalId}/tasks/${params.dueBy}/todos`
   );
- 
+
   const snapshot = await getDocs(collectionRef);
   snapshot.forEach((doc) => {
-    data.push({todoId: doc.id, goalId: params.goalId, ...doc.data() } as todoOutputType);
+    data.push({
+      todoId: doc.id,
+      goalId: params.goalId,
+      ...doc.data(),
+    } as todoOutputType);
   });
   return data;
 };

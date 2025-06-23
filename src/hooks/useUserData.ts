@@ -50,6 +50,7 @@ export const useUserData = () => {
               todayCoins: data.todayCoins,
               percentileRank: data.percentileRank,
               xp: data.xp,
+              streakLastUpdated: data.streakLastUpdated
             });
           } else {
             console.warn("No user doc found!");

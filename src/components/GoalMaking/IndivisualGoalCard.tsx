@@ -13,7 +13,7 @@ const IndivisualGoalCard = ({ docData }: { docData: goalOutputType }) => {
   );
   const progress = (docData.doneTodos/100)*docData.totalTodos
   return (
-    <div className="bg-slate-800 border-slate-700 border-2 p-6 rounded-2xl mx-auto text-white relative ">
+    <div className="bg-[#262636] border-slate-700 border-2 p-6 rounded-2xl mx-auto text-white relative ">
       {/* XP Badge */}
       <div className="absolute top-4 right-4 bg-yellow-600/20 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1">
         <Star className="w-4 h-4 text-yellow-400" />

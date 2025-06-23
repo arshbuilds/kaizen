@@ -16,7 +16,6 @@ const FormDropdown = ({
   placeholder: string;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState<string | null>(null);
 
   return (
     <div className="relative w-64">

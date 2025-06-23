@@ -1,4 +1,5 @@
-import { MonthStats } from './../types/progressTypes';
+import { rankedUserType } from "./../types/userTypes";
+import { MonthStats } from "./../types/progressTypes";
 import { formatDate } from "./dateTimeUtils";
 
 export const getRandomNumber = (min: number, max: number) => {
@@ -20,15 +21,13 @@ export function getCompletionRate(stats: MonthStats): number {
   return Math.round((done / total) * 100);
 }
 
-export const modifyForBarGraph = (
-  monthStats: MonthStats,
-) => {
+export const modifyForBarGraph = (monthStats: MonthStats) => {
   const result = {
     weekDays: [] as string[],
     completionRate: [] as number[],
   };
-  
-const endDate = new Date()
+
+  const endDate = new Date();
   const year = endDate.getFullYear();
   const month = endDate.getMonth(); // 0-indexed
 
@@ -57,14 +56,17 @@ const endDate = new Date()
   return result;
 };
 
-export const modifyForLineChart = ({monthStats}: {monthStats: MonthStats}) => {
-  
+export const modifyForLineChart = ({
+  monthStats,
+}: {
+  monthStats: MonthStats;
+}) => {
   const result = {
     weekDays: [] as string[],
     timeSpent: [] as number[],
   };
-  
-const endDate = new Date()
+
+  const endDate = new Date();
   const year = endDate.getFullYear();
   const month = endDate.getMonth(); // 0-indexed
 
@@ -84,4 +86,18 @@ const endDate = new Date()
   }
 
   return result;
-}
+};
+
+export const modifyForNonTop3 = ({
+  docs,
+  userId,
+}: {
+  docs: rankedUserType[];
+  userId: string;
+}) => {
+  const tail = docs.slice(3); 
+  const userDoc = docs.find((d)=> d.userId === userId)
+  console.log(userDoc)
+  const tailWithoutUser = tail.filter((d) => d.userId !== userId);
+  return [userDoc, ...tailWithoutUser];
+};

@@ -20,7 +20,7 @@ const Calendar = ({
     if (percentageDone < 40) return "#3f3966";
   };
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center p-4 rounded-xl bg-slate-800 border border-purple-400/30">
+    <div className="w-full h-full flex flex-col items-center justify-center p-4 rounded-xl bg-[#262636] border border-purple-400/30">
       <div className="grid grid-cols-7 gap-1 w-full h-full">
         {Object.entries(data).map((day) => (
           <div

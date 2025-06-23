@@ -4,7 +4,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import AuthProvider from "../Providers/AuthProvider";
 import QueryProvider from "../Providers/QueryProvider";
-// import Navbar from "../components/ui/Navbar";
+import Navbar from "../components/ui/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,6 +26,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const HIDDEN_NAV_PATHS = ["/enter", "/goals/new", "/"]
   return (
     <html lang="en">
       <body
@@ -35,7 +36,7 @@ export default function RootLayout({
         <QueryProvider>
           <AuthProvider>
             {children}
-            {/* <Navbar /> */}
+            <Navbar hidden={HIDDEN_NAV_PATHS}/>
           </AuthProvider>
           <Toaster position="top-center" />
         </QueryProvider>

@@ -31,10 +31,8 @@ export const getConsistencyData = async ({userId, year, month}: {
     if (!monthStats[date]) {
       monthStats[date] = {
         date,
-        doneCount: 10, //REMOVE LATER
-        notDoneCount: 2,
-        productivityScore: 0,
-        rating: "missed",
+        doneCount: 0, 
+        notDoneCount: 0,
         taskIdsDone: [],
         taskIdsMissed: [],
         timeSpentByCategory: {},

@@ -9,6 +9,8 @@ export type todoOutputType = {
     status: boolean;
     priority: string;
     goalId: string;
+    timeRequired: number;
+    
 }
 
 export type todoInputType = {
@@ -18,6 +20,7 @@ export type todoInputType = {
     coins: number;
     status: boolean;
     priority: string;
+    timeRequired: number;
 }
 
 export type todoParentType = {

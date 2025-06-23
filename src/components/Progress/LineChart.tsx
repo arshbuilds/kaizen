@@ -25,7 +25,6 @@ ChartJS.register(
 
 const LineChart = ({ data }: { data: MonthStats }) => {
   const { weekDays, timeSpent } = modifyForLineChart({ monthStats: data });
-  console.log(weekDays, timeSpent);
   const options = {
     responsive: true,
     plugins: {
@@ -44,14 +43,14 @@ const LineChart = ({ data }: { data: MonthStats }) => {
     datasets: [
       {
         label: "Time spent",
-        data: [29, 12, 45, 12, 34, 90],
+        data: timeSpent,
         borderColor: "rgb(80, 180, 209)",
         fill: true,
         tension: 0.4,
       },
     ],
   };
-  return <Line className="bg-slate-800 border border-purple-400/30 p-4 my-4 rounded-xl" options={options} data={chartData} />;
+  return <Line className="bg-[#262636] border border-purple-400/30 p-4 my-4 rounded-xl" options={options} data={chartData} />;
 };
 
 export default LineChart;

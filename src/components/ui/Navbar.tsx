@@ -1,14 +1,14 @@
 "use client";
-
 import { useState } from "react";
 import { CiHome, CiSquareCheck } from "react-icons/ci";
 import { FiTarget } from "react-icons/fi";
 import { FaChartBar } from "react-icons/fa";
 import { FaUserAlt } from "react-icons/fa";
+import { usePathname } from "next/navigation";
 
-export default function Navbar() {
+export default function Navbar({hidden}:{hidden: string[]}) {
   const [activeTab, setActiveTab] = useState(0);
-
+  const pathname = usePathname();
   const navItems = [
     { icon: CiHome, label: "Home" },
     { icon: CiSquareCheck, label: "Tasks" },
@@ -16,13 +16,14 @@ export default function Navbar() {
     { icon: FaChartBar, label: "Analytics" },
     { icon: FaUserAlt, label: "Profile" },
   ];
-
   return (
-    <div className="relative bottom-0 flex items-center justify-center p-4">
-      <div className="relative">
+    <div
+      className={`${hidden.includes(pathname) && "hidden"} fixed bottom-0 left-0 right-0 flex items-center justify-center z-50 w-full`}
+    >
+      <div className="relative w-full">
         {/* Main navigation container */}
-        <div className="bg-[#262636] backdrop-blur-sm rounded-3xl p-4 border border-gray-700/50">
-          <div className="flex items-center space-x-2">
+        <div className="bg-[#262636] w-full backdrop-blur-sm p-4 border border-gray-700/50">
+          <div className="flex items-center justify-evenly space-x-2">
             {navItems.map((item, index) => {
               const Icon = item.icon;
               const isActive = activeTab === index;
@@ -31,7 +32,7 @@ export default function Navbar() {
                   key={index}
                   onClick={() => setActiveTab(index)}
                   className={`
-                    relative p-4 rounded-2xl transition-all duration-300 ease-out
+                    relative p-2 rounded-2xl transition-all duration-300 ease-out
                     ${
                       isActive
                         ? "bg-blue-500 text-white shadow-lg shadow-blue-500/25"

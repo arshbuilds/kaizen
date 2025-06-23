@@ -38,7 +38,7 @@ const GetTodosFromPrompt = () => {
         data.title,
         data.tags,
         data.description,
-        data.weeks
+        data.weeks,
       );
     },
     onMutate:() => {
@@ -63,7 +63,7 @@ const GetTodosFromPrompt = () => {
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
       {/* Field 1*/}
-      <div className="bg-slate-800/40 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
+      <div className="bg-[#262636]/40 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
             1
@@ -81,7 +81,7 @@ const GetTodosFromPrompt = () => {
         />
       </div>
       {/* field 2 */}
-      <div className="bg-slate-800/40 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
+      <div className="bg-[#262636]/40 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-6 h-6 bg-pink-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
             2
@@ -105,7 +105,7 @@ const GetTodosFromPrompt = () => {
       </div>
 
       {/* Field 3*/}
-      <div className="bg-slate-800/40 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
+      <div className="bg-[#262636]/40 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
             3
@@ -122,7 +122,8 @@ const GetTodosFromPrompt = () => {
           className="w-full bg-slate-700/50 text-white placeholder-gray-400 border border-slate-600 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </div>
-      <div className="bg-slate-800/40 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
+      {/* Field 4 */}
+      <div className="bg-[#262636]/40 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
             4

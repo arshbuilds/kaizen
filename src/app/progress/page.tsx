@@ -31,7 +31,7 @@ const Progress = () => {
   const today = data![formatDate(new Date())];
 
   return (
-    <div className="min-h-screen p-4 mx-auto">
+    <div className="min-h-screen p-4 mx-auto pb-24">
       <div className="space-y-6">
         <StatsCard
           dayStreak={user!.dayStreak}

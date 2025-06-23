@@ -1,12 +1,11 @@
 "use client";
 import Loading from "@/src/components/Loading/Loading";
-// import CreateNewTaskBottomSheet from "@/src/components/TaskComponents/CreateNewTaskBottomSheet";
 import {
   HabitTaskItemMapper,
   TodoTaskItemMapper,
 } from "@/src/components/TaskComponents/TaskItemMapper";
 import { useAuth } from "@/src/hooks/useAuth";
-import { getTodaysTasks } from "@/src/services/goalServices";
+import { getTodaysTasks} from "@/src/services/goalServices";
 import { getHabitsByUser } from "@/src/services/habitServices";
 import { formatDate } from "@/src/utils/dateTimeUtils";
 import { useQuery } from "@tanstack/react-query";
@@ -44,22 +43,15 @@ const Today = () => {
   });
 
   return (
-    <div className="min-h-screen p-4 mx-auto">
+    <div className="min-h-screen p-4 mx-auto pb-24">
       <div className="space-y-6">
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-white text-2xl font-bold">My Tasks</h1>
             <p className="text-gray-300 text-sm">Today, {currentDate}</p>
           </div>
-          {/* <button
-            onClick={addTask}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-          >
-            <FaPlus size={16} />
-            Add Task
-          </button> */}
         </div>
-        <div className="bg-slate-800/30 rounded-xl p-1 mb-6">
+        <div className="bg-[#262636]/30 rounded-xl p-1 mb-6">
           <div className="flex">
             <button
               onClick={() => setTodoActive(true)}
@@ -83,7 +75,6 @@ const Today = () => {
             </button>
           </div>
         </div>
-        {/* <CreateNewTaskBottomSheet /> */}
         {todoActive ? (
           goalsQuery.data && goalsQuery.data.length !== 0 ? (
             <TodoTaskItemMapper
@@ -97,7 +88,7 @@ const Today = () => {
         ) : habitsQuery.data && habitsQuery.data.length !== 0 ? (
           <HabitTaskItemMapper queryKey={"habits"} data={habitsQuery.data} />
         ) : (
-          <>There are no todos left for today</>
+          <>There are no Habits left for today</>
         )}
       </div>
     </div>

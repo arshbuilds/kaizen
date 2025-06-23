@@ -14,7 +14,7 @@ const ProgressDashboard = ({
   xp: number;
 }) => {
   return (
-    <div className="bg-slate-800 border-slate-700 border-2 p-6 rounded-2xl max-w-sm mx-auto text-white">
+    <div className="bg-[#262636] border-slate-700 border-2 p-6 rounded-2xl max-w-sm mx-auto text-white">
       {/* Stats Grid */}
       <div className="grid grid-cols-4 gap-4 mb-6">
         {/* Goals */}

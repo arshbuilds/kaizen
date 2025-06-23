@@ -36,6 +36,7 @@ const CreateNewTodoForm = ({ onClose }: { onClose: () => void }) => {
           priority: data.priority,
           xp: 0,
           coins: 0,
+          timeRequired: 10,
         },
         user!.userId,
         data.goalId,

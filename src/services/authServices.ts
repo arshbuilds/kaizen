@@ -8,7 +8,13 @@ import {
 import { auth, db } from "../lib/firebase";
 import { useAuthStore } from "../stores/useAuthStore";
 import { addNewUser } from "../repositories/authRepos";
-import { doc, getDoc, serverTimestamp } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  increment,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { userType } from "../types/userTypes";
 import { addGoalByUser } from "./goalServices";
 
@@ -68,6 +74,7 @@ export const loginWithGoogle = async (): Promise<userType> => {
         todayCoins: 0,
         percentileRank: 0,
         xp: 0,
+        streakLastUpdated: serverTimestamp(),
       };
       await addNewUser(userData);
       await addGoalByUser({
@@ -76,7 +83,7 @@ export const loginWithGoogle = async (): Promise<userType> => {
         tags: "general",
         description: "General Todos",
         weeks: 0,
-        totalTodos: 0
+        totalTodos: 0,
       });
       return userData;
     }
@@ -120,6 +127,7 @@ export const signupWithEmailPass = async ({
       todayCoins: 0,
       percentileRank: 0,
       xp: 0,
+      streakLastUpdated: serverTimestamp(),
     };
     await addNewUser(userData);
     await addGoalByUser({
@@ -128,6 +136,7 @@ export const signupWithEmailPass = async ({
       tags: "general",
       description: "General Todos",
       weeks: 0,
+      totalTodos: 0,
     });
     return userData;
   } catch (e) {
@@ -170,7 +179,8 @@ export const loginWithEmailPass = async ({
         weeklyCoins: data.weeklyCoins,
         todayCoins: data.todayCoins,
         percentileRank: data.percentileRank,
-        xp: 0,
+        xp: data.xp,
+        streakLastUpdated: data.streakLastUpdated,
       };
       return userData;
     } else {
@@ -185,4 +195,28 @@ export const loginWithEmailPass = async ({
 export const logoutUser = async () => {
   await signOut(auth);
   useAuthStore.getState().setUser(null);
+};
+
+export const incrementUserXp = async ({
+  userId,
+  isIncrementing,
+}: {
+  userId: string;
+  isIncrementing: boolean;
+}) => {
+  try {
+    const userRef = doc(db, `users/${userId}`);
+    if (isIncrementing) {
+      await updateDoc(userRef, {
+        xp: increment(1),
+      });
+    } else {
+      await updateDoc(userRef, {
+        xp: increment(-1),
+      });
+    }
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
 };

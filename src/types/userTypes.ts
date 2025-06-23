@@ -17,8 +17,6 @@ export type FollowingType = {
   followedAt: FirestoreTimestamp;
 };
 
-
-
 export type userType = {
   userId: string;
   userName: string;
@@ -34,7 +32,6 @@ export type userType = {
   followersCount: number;
   goalsCount: number;
 
-
   // Achievements
   dayStreak: number;
   meditationHours: number; // in hours
@@ -49,7 +46,17 @@ export type userType = {
   xp: number;
 
   // Metadata
-  lastUpdated?: FirestoreTimestamp;
+  streakLastUpdated?: FirestoreTimestamp;
 };
 
+export type settings = {
+  pushNotifs: boolean;
+  taskAlerts: boolean;
+  appearence: Themes;
+};
 
+export interface rankedUserType extends userType {
+  rank: number;
+}
+
+export type Themes = "dark" | "light";

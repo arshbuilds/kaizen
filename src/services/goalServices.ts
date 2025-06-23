@@ -2,16 +2,19 @@ import {
   arrayUnion,
   collection,
   doc,
+  increment,
   serverTimestamp,
   setDoc,
+  updateDoc,
   writeBatch,
 } from "firebase/firestore";
 import { getUserGoalsData } from "../repositories/goalRepos";
 import { db } from "../lib/firebase";
 import { kebabCase } from "lodash";
-import { goalOutputType } from "../types/goalTypes";
-import { todoOutputType } from "../types/todoTypes";
+import { goalInputType, goalOutputType } from "../types/goalTypes";
+import { todoInputType, todoOutputType } from "../types/todoTypes";
 import { getTodosByUser } from "./todoServices";
+import { DailyStats } from "../types/progressTypes";
 
 export const getGoalsByUser = async (userId: string) => {
   const docData = await getUserGoalsData(userId);
@@ -46,8 +49,58 @@ export const addGoalByUser = async ({
       tags: tags.split(","),
       totalTodos,
       doneTodos: 0,
+      timeSpent: 0,
     };
     await setDoc(docRef, data);
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+export const updateGoal = async ({
+  data,
+  userId,
+  goalId,
+}: {
+  data: Partial<goalInputType>;
+  userId: string;
+  goalId: string;
+}) => {
+  try {
+    const docRef = doc(db, `users/${userId}/goals/${goalId}`);
+    await updateDoc(docRef, data);
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+export const incrementAndDecrementGoalValues = async ({
+  userId,
+  goalId,
+  timeTaken,
+  status,
+}: {
+  userId: string;
+  goalId: string;
+  timeTaken: number;
+  status: boolean;
+}) => {
+  try {
+    if (status) {
+      const docRef = doc(db, `users/${userId}/goals/${goalId}`);
+      await updateDoc(docRef, {
+        doneTodos: increment(1),
+        timeSpent: increment(timeTaken),
+      });
+    }else{
+      const docRef = doc(db, `users/${userId}/goals/${goalId}`);
+      await updateDoc(docRef, {
+        doneTodos: increment(-1),
+        timeSpent: increment(-timeTaken),
+      });
+    }
   } catch (e) {
     console.error(e);
     throw e;
@@ -68,6 +121,8 @@ export const uploadTasksForGoals = async (
   for (const week of data) {
     for (const [dateStr, todos] of Object.entries(week)) {
       // Parent document
+      let dayTodos = 0;
+      const todoIds = [];
       const taskDocRef = doc(
         db,
         `users/${userId}/goals/${goalId}/tasks/${dateStr}`
@@ -79,18 +134,35 @@ export const uploadTasksForGoals = async (
 
       // Todos subcollection
       const todosColRef = collection(taskDocRef, "todos");
-
+      const dailyStatRef = doc(db, `users/${userId}/dailyStats/${dateStr}`);
       for (const todo of todos as todoOutputType[]) {
         const todoId = kebabCase(todo.title);
         const todoRef = doc(todosColRef, todoId);
-        batch.set(todoRef, {
+        const batchData: todoInputType = {
           title: todo.title,
           description: todo.description,
           status: todo.status,
           priority: todo.priority,
-        });
+          timeRequired: todo.timeRequired,
+          xp: todo.xp,
+          coins: todo.coins,
+        };
+        batch.set(todoRef, batchData);
         totalTodos = totalTodos + 1;
+        dayTodos = dayTodos + 1;
+        todoIds.push(todoId);
       }
+      const dailyStatData: DailyStats = {
+        date: dateStr,
+        doneCount: 0,
+        notDoneCount: dayTodos,
+        taskIdsDone: [],
+        taskIdsMissed: todoIds,
+        timeSpentByCategory: {},
+        timeSpentPerTimeOfDay: {},
+        totalTimeSpent: 0,
+      };
+      batch.set(dailyStatRef, dailyStatData);
     }
   }
 

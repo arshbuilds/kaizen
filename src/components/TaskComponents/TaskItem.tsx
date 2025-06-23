@@ -1,8 +1,8 @@
 import React from "react";
 import { todoOutputType } from "../../types/todoTypes";
 import { DeleteButton, ToggleButton } from "./TaskButtons";
-import { habitType } from "@/src/types/habitTypes";
 import { useAuth } from "@/src/hooks/useAuth";
+import { habitOutputType } from "@/src/types/habitTypes";
 
 export const TodoTaskItem = ({
   data,
@@ -13,7 +13,8 @@ export const TodoTaskItem = ({
   dueBy: string;
   queryKey: string;
 }) => {
-  const { title, status, description, priority, todoId, goalId } = data;
+  const { title, status, description, priority, todoId, goalId, timeRequired } =
+    data;
   const { user } = useAuth();
 
   return (
@@ -28,7 +29,8 @@ export const TodoTaskItem = ({
             : "#22c55e",
       }}
     >
-      <div className="w-8 flex-shrink-0 flex justify-center">
+      {/* left – checkbox */}
+      <div className="flex-shrink-0 w-8 flex justify-center items-center">
         <ToggleButton
           taskType="todo"
           completionStatus={status}
@@ -37,31 +39,21 @@ export const TodoTaskItem = ({
           dueBy={dueBy}
           todoId={todoId}
           queryKey={queryKey}
+          timeRequired={timeRequired}
         />
       </div>
 
-      {/* Content */}
-      <div className="flex-1 px-4">
+      {/* middle – content should be allowed to shrink */}
+      <div className="flex-1 min-w-0 px-4">
+        {/* min-w-0 keeps this column from forcing overflow[2] */}
         <span className="block text-md font-bold text-gray-300 truncate">
           {title}
         </span>
         <span className="block text-sm text-gray-400">{description}</span>
-        <span
-          className="w-max text-center bg-[#121212] rounded-xl p-2 py-1 text-xs border-1"
-          style={{
-            borderColor:
-              priority === "high"
-                ? "#ef4444"
-                : priority === "medium"
-                ? "#facc15"
-                : "#22c55e",
-          }}
-        >
-          {priority}
-        </span>
       </div>
 
-      <div className="w-16 flex-shrink-0 flex justify-center">
+      {/* right – delete button with fixed box so it cannot protrude */}
+      <div className="flex-shrink-0 w-10 h-10 flex justify-center items-center">
         <DeleteButton
           taskType="todo"
           userId={user!.userId}
@@ -79,14 +71,15 @@ export const HabitTaskItem = ({
   data,
   queryKey,
 }: {
-  data: habitType;
+  data: habitOutputType;
   queryKey: string;
 }) => {
   const { title, status, habitId, streak, lastCompleted } = data;
   const { user } = useAuth();
   return (
-    <li className="bg-gray-800 border-l-4 rounded-lg p-2 flex items-center my-2 min-h-20">
-      <div className="w-8 flex-shrink-0 flex justify-center">
+    <li className="bg-gray-800 border-l-4 rounded-lg p-2 flex items-center my-2 min-h-28">
+      {/* left – checkbox */}
+      <div className="flex-shrink-0 w-8 flex justify-center items-center">
         <ToggleButton
           taskType="habit"
           completionStatus={status}
@@ -98,12 +91,17 @@ export const HabitTaskItem = ({
         />
       </div>
 
-      <div className="flex-1 px-4 flex flex-col justify-center">
-        <span>{title}</span>
-        <span className="text-gray-400 text-sm">streak - {streak}</span>
+      {/* middle – content should be allowed to shrink */}
+      <div className="flex-1 min-w-0 px-4">
+        {/* min-w-0 keeps this column from forcing overflow[2] */}
+        <span className="block text-md font-bold text-gray-300 truncate">
+          {title}
+        </span>
+        <span className="block text-sm text-gray-400">{streak} day streak</span>
       </div>
 
-      <div className="w-16 flex-shrink-0 flex justify-center">
+      {/* right – delete button with fixed box so it cannot protrude */}
+      <div className="flex-shrink-0 w-10 h-10 flex justify-center items-center">
         <DeleteButton
           taskType="habit"
           queryKey={queryKey}

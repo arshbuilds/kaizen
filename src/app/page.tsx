@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <AuthGate>
       <TasksGate>
-        <div className="min-h-screen p-4 mx-auto">
+        <div className="min-h-screen p-4 mx-auto pb-24">
           <div className="space-y-6">
             <DashboardHeader />
             <ProgressCard />

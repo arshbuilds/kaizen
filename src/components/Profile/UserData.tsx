@@ -20,9 +20,9 @@ const UserData = ({
   pfpUrl,
   createdAt,
   interests,
-  followers,
-  following,
-  goals,
+  // followers,
+  // following,
+  // goals,
 }: userProps) => {
   const year = getYearFromTimestamp(createdAt);
   return (
@@ -71,7 +71,7 @@ const UserData = ({
           ))}
         </div>
         {/* Stats */}
-        <div className="mt-8 flex w-full justify-between border-t border-gray-700 pt-4">
+        {/* <div className="mt-8 flex w-full justify-between border-t border-gray-700 pt-4">
           <div className="flex flex-col items-center">
             <span className="text-lg font-semibold text-white">
               {following}
@@ -88,7 +88,7 @@ const UserData = ({
             <span className="text-lg font-semibold text-white">{goals}</span>
             <span className="text-xs text-gray-400">Goals</span>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
