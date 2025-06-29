@@ -5,6 +5,7 @@ import Loading from "@/src/components/Loading/Loading";
 import { useAuth } from "@/src/hooks/useAuth";
 import { getGoalsByUser } from "@/src/services/goalServices";
 import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 import React from "react";
 
 const Goals = () => {
@@ -23,9 +24,9 @@ const Goals = () => {
   if (isError) {
     return <>Some error occured</>;
   }
-  return (
 
-        <div className="min-h-screen p-4 mx-auto pb-24">
+  return (
+    <div className="min-h-screen p-4 mx-auto pb-24">
       <div className="space-y-6">
         {/* Header */}
         <div className="text-center mb-8">
@@ -39,12 +40,17 @@ const Goals = () => {
           badges={user!.badgesCount}
           xp={user!.xp}
         />
-        {data?.length !== 0 ? (
+        {data?.length ? (
           data?.map((doc, index) => (
             <IndivisualGoalCard docData={doc} key={index} />
           ))
         ) : (
-          <>no goals</>
+          <Link
+            href="/goals/new"
+            className="block text-center mx-auto bg-[#492072] py-2 px-4 rounded-xl text-white"
+          >
+            No goals yet, create one now
+          </Link>
         )}
       </div>
     </div>

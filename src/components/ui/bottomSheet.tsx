@@ -22,7 +22,7 @@ const BottomSheet = ({ isOpen, onClose, children }: Props) => {
         <>
           {/* Overlay */}
           <motion.div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+            className="fixed inset-0 bg-black bg-opacity-50 z-50"
             onClick={onClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.7 }}

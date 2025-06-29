@@ -1,4 +1,3 @@
-import React from "react";
 import { AuthGate } from "../components/Auth/AuthGate";
 import { TasksGate } from "../components/TaskComponents/TasksGate";
 import DashboardHeader from "../components/Home/DashboardHeader";

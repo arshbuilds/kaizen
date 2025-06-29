@@ -3,7 +3,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/src/hooks/useAuth";
 import { getTasksFromPrompt } from "@/src/services/ai/getTasks";
 import { uploadTasksForGoals } from "@/src/services/goalServices";
@@ -22,7 +22,7 @@ const habitSchema = z.object({
 type HabitForm = z.infer<typeof habitSchema>;
 
 const GetTodosFromPrompt = () => {
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
   const router = useRouter();
   const { user } = useAuth();
   const { register, handleSubmit } = useForm<HabitForm>({
@@ -45,6 +45,7 @@ const GetTodosFromPrompt = () => {
      savingToastId = toast.loading("adding goal")
     },
     onSuccess: () => {
+queryClient.invalidateQueries({queryKey: ["goals"]})
       toast.dismiss(savingToastId)
       toast.success("Goal Added succesfully");
     },

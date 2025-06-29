@@ -2,6 +2,7 @@ import {
   arrayUnion,
   collection,
   doc,
+  getDoc,
   increment,
   serverTimestamp,
   setDoc,
@@ -50,6 +51,7 @@ export const addGoalByUser = async ({
       totalTodos,
       doneTodos: 0,
       timeSpent: 0,
+      isCompleted: false
     };
     await setDoc(docRef, data);
   } catch (e) {
@@ -94,7 +96,7 @@ export const incrementAndDecrementGoalValues = async ({
         doneTodos: increment(1),
         timeSpent: increment(timeTaken),
       });
-    }else{
+    } else {
       const docRef = doc(db, `users/${userId}/goals/${goalId}`);
       await updateDoc(docRef, {
         doneTodos: increment(-1),
@@ -189,6 +191,23 @@ export const getTodaysTasks = async (userId: string, dueBy: string) => {
       todos.push(...data);
     }
     return todos;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+export const getGoalByUser = async ({
+  userId,
+  goalId,
+}: {
+  userId: string;
+  goalId: string;
+}): Promise<goalOutputType> => {
+  try {
+    const goalRef = doc(db, `users/${userId}/goals/${goalId}`);
+    const goalData = await getDoc(goalRef);
+    return goalData.data() as goalOutputType;
   } catch (e) {
     console.error(e);
     throw e;

@@ -1,6 +1,7 @@
 "use client";
 import Loading from "@/src/components/Loading/Loading";
 import AchievementsSection from "@/src/components/Profile/AchievementsSection";
+import ProfileSettings from "@/src/components/Profile/ProfileSettings";
 // import GrowthCoinsSection from "@/src/components/Profile/GrowthCoinsSection";
 import UserData from "@/src/components/Profile/UserData";
 import { getGoalsByUser } from "@/src/services/goalServices";
@@ -45,31 +46,13 @@ const Profile = () => {
           following={user.followingCount}
           goals={user.goalsCount}
         />
-        <div className="flex flex-row gap-4">
-          {/* <DailyStatCard
-          icon={FaBrain}
-          title="Daily Focus"
-          hours={user.dailyFocusHours}
-          hourDelta={user.dailyFocusDelta}
-          />
-          <DailyStatCard
-          icon={FaHeartbeat}
-          title="Wellbeing Score"
-          score={user.wellbeingScore}
-          scoreDelta={user.wellbeingDelta}
-          /> */}
-        </div>
         <AchievementsSection
           dayStreak={user.dayStreak}
           timeSpent={timeSpentInHours}
           tasksCompleted={tasksCompleted}
         />
-        {/* <GrowthCoinsSection
-          todayCoins={user.todayCoins}
-          totalCoins={user.todayCoins}
-          weeklyCoins={user.weeklyCoins}
-          percentileRank={user.percentileRank}
-        /> */}
+        <ProfileSettings/>
+
       </div>
     </div>
   );

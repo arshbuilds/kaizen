@@ -26,7 +26,6 @@ const Arena = () => {
 
   const nonTop3Ranks = modifyForNonTop3({docs: data!, userId: user!.userId})
 
-
   return (
     <div className="min-h-screen p-4 mx-auto pb-24">
       <div className="space-y-6">

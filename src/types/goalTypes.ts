@@ -8,6 +8,7 @@ export type goalInputType = {
   tags: Array<string>;
   totalTodos: number;
   doneTodos: number;
+  isCompleted: boolean;
 };
 
 export type goalOutputType = {
@@ -20,4 +21,5 @@ export type goalOutputType = {
   totalTodos: number;
   doneTodos: number;
   timeSpent: number;
+  isCompleted: boolean;
 };

@@ -8,10 +8,13 @@ import {
 } from "../repositories/habitRepos";
 import { serverTimestamp } from "firebase/firestore";
 
-export const addHabitByUser = async (
-  formData: { title: string; category: string },
-  userId: string
-) => {
+export const addHabitByUser = async ({
+  formData,
+  userId,
+}: {
+  formData: { title: string; category: string };
+  userId: string;
+}) => {
   try {
     const data: habitInputType = {
       habitId: kebabCase(formData.title),

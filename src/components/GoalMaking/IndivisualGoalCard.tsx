@@ -2,6 +2,7 @@ import { goalOutputType } from "@/src/types/goalTypes";
 import { convertToDate } from "@/src/utils/dateTimeUtils";
 import { addWeeks, differenceInDays } from "date-fns";
 import { Calendar, Clock, Star } from "lucide-react";
+import Link from "next/link";
 import randomColor from "randomcolor";
 import React from "react";
 
@@ -11,13 +12,16 @@ const IndivisualGoalCard = ({ docData }: { docData: goalOutputType }) => {
     addWeeks(createdAt!, docData.weeks),
     new Date()
   );
-  const progress = (docData.doneTodos/100)*docData.totalTodos
+  const progress = (docData.doneTodos / 100) * docData.totalTodos;
+  // const progress = 100;
   return (
     <div className="bg-[#262636] border-slate-700 border-2 p-6 rounded-2xl mx-auto text-white relative ">
       {/* XP Badge */}
       <div className="absolute top-4 right-4 bg-yellow-600/20 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1">
         <Star className="w-4 h-4 text-yellow-400" />
-        <span className="text-sm font-medium text-yellow-300">{docData.totalTodos} XP</span>
+        <span className="text-sm font-medium text-yellow-300">
+          {docData.totalTodos} XP
+        </span>
       </div>
 
       {/* Goal Title */}
@@ -46,8 +50,8 @@ const IndivisualGoalCard = ({ docData }: { docData: goalOutputType }) => {
       </div>
 
       {/* Progress Section */}
-      <div className="mb-4">
-        <div className="flex items-center justify-between mb-2">
+      <div className="mb-2">
+        <div className="flex items-center justify-between mb-4">
           <span className="text-sm text-gray-300">Progress</span>
           <span className="text-sm font-medium text-white">{progress}%</span>
         </div>
@@ -60,7 +64,6 @@ const IndivisualGoalCard = ({ docData }: { docData: goalOutputType }) => {
           ></div>
         </div>
       </div>
-
       {/* Footer Info */}
       <div className="flex items-center justify-between text-sm text-gray-400">
         <div className="flex items-center gap-1">
@@ -72,6 +75,16 @@ const IndivisualGoalCard = ({ docData }: { docData: goalOutputType }) => {
           <span className="font-medium">{daysBetween} days left</span>
         </div>
       </div>
+      {progress === 100 && (
+        <div className="mt-3">
+          <Link
+            href={`/goals/completed?id=${docData.goalId}`}
+            className="bg-[#db8ac5] bottom-0 rounded-lg py-1 px-3"
+          >
+            Finish
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

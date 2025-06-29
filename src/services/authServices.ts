@@ -17,6 +17,7 @@ import {
 } from "firebase/firestore";
 import { userType } from "../types/userTypes";
 import { addGoalByUser } from "./goalServices";
+import { addHabitByUser } from "./habitServices";
 
 const provider = new GoogleAuthProvider();
 
@@ -77,6 +78,20 @@ export const loginWithGoogle = async (): Promise<userType> => {
         streakLastUpdated: serverTimestamp(),
       };
       await addNewUser(userData);
+      await addHabitByUser({
+        formData: {
+          title: "Meditate 10 minutes",
+          category: "🏥 Health",
+        },
+        userId: user.uid,
+      });
+      await addHabitByUser({
+        formData: {
+          title: "Read 30 minutes",
+          category: "📚 Learning",
+        },
+        userId: user.uid,
+      });
       await addGoalByUser({
         userId: user.uid,
         title: "general",
@@ -130,6 +145,20 @@ export const signupWithEmailPass = async ({
       streakLastUpdated: serverTimestamp(),
     };
     await addNewUser(userData);
+    await addHabitByUser({
+      formData: {
+        title: "Meditate 10 minutes",
+        category: "🏥 Health",
+      },
+      userId: user.uid,
+    });
+    await addHabitByUser({
+      formData: {
+        title: "Read 30 minutes",
+        category: "📚 Learning",
+      },
+      userId: user.uid,
+    });
     await addGoalByUser({
       userId: user.uid,
       title: "general",
@@ -140,7 +169,7 @@ export const signupWithEmailPass = async ({
     });
     return userData;
   } catch (e) {
-    console.error("Login failed:", e);
+    console.error("Signup failed:", e);
     throw e;
   }
 };
@@ -218,5 +247,20 @@ export const incrementUserXp = async ({
   } catch (e) {
     console.error(e);
     throw e;
+  }
+};
+
+export const updateUserData = async ({
+  userId,
+  data,
+}: {
+  userId: string;
+  data: { name: string; interests: string[]; role: string };
+}) => {
+  try {
+    const userRef = doc(db, `users/${userId}`);
+    await updateDoc(userRef, data);
+  } catch (e) {
+    console.error(e);
   }
 };

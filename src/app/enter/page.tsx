@@ -22,7 +22,7 @@ const Enter = () => {
     <div className="min-h-screen flex justify-center bg-gradient-to-br from-[#1a1a2e] to-[#16213e] px-4">
       <div className="my-12 w-full max-w-sm bg-[#0f172a] rounded-2xl p-6 shadow-xl">
         <div className="flex flex-col items-center">
-          <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mb-4">
+          <div className="w-16 h-16 bg-[#262636] rounded-full flex items-center justify-center mb-4">
             <span className="text-white text-sm">Logo</span>
           </div>
           <h1 className="text-white text-2xl font-semibold">Kaizen</h1>

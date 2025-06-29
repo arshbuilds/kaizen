@@ -75,34 +75,71 @@ const CreateNewTodoForm = ({ onClose }: { onClose: () => void }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input {...register("title")} placeholder="Todo Name" />
-      <input {...register("description")} placeholder="description" />
-      <Controller
-        control={control}
-        name="priority"
-        render={({ field }) => (
-          <FormDropdown
-            value={field.value}
-            onChange={field.onChange}
-            options={["low", "medium", "high"]}
-            placeholder="priority"
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 text-sm my-16">
+      <div>
+        <label className="mb-1 block font-medium">Task Name</label>
+        <input
+          {...register("title")}
+          required
+          name="name"
+          placeholder="e.g., Review project proposal"
+          className="w-full rounded-lg border border-slate-600/60 bg-slate-700/60 px-4 py-2 placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+        />
+      </div>
+
+      {/* Description */}
+      <div>
+        <label className="mb-1 block font-medium">Description</label>
+        <textarea
+          rows={3}
+          {...register("description")}
+          placeholder="Add more details about the task..."
+          className="w-full resize-none rounded-lg border border-slate-600/60 bg-slate-700/60 px-4 py-2 placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="mb-1 block font-medium">Priority</label>
+          <Controller
+            control={control}
+            name="priority"
+            render={({ field }) => (
+              <FormDropdown
+                value={field.value}
+                onChange={field.onChange}
+                options={["low", "medium", "high"]}
+                placeholder="priority"
+              />
+            )}
           />
-        )}
-      />
-      <Controller
-        control={control}
-        name="goalId"
-        render={({ field }) => (
-          <FormDropdown
-            value={field.value}
-            onChange={field.onChange}
-            options={user!.goals}
-            placeholder="Select"
+        </div>
+
+        <div>
+          <label className="mb-1 block font-medium">Category</label>
+          <Controller
+            control={control}
+            name="goalId"
+            render={({ field }) => (
+              <FormDropdown
+                value={field.value}
+                onChange={field.onChange}
+                options={user!.goals}
+                placeholder="Select"
+              />
+            )}
           />
-        )}
-      />
-      <button type="submit">sumbit</button>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3 pt-2">
+        <button
+          type="submit"
+          className="flex-1 rounded-md bg-gradient-to-r from-violet-500 to-pink-500 px-6 py-3 font-medium text-white hover:opacity-90"
+        >
+          + Create Task
+        </button>
+      </div>
     </form>
   );
 };

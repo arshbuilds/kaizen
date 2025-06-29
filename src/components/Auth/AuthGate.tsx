@@ -14,7 +14,7 @@ export const AuthGate = ({ children }: { children: React.ReactNode }) => {
     }
   }, [user, loading, router, pathname]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>fuck you</div>;
 
   return <>{children}</>;
 };
