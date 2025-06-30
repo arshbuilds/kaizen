@@ -1,5 +1,4 @@
 "use client";
-import { FirestoreTimestamp } from "@/src/lib/firebase";
 import { incrementUserXp } from "@/src/services/authServices";
 import {
   deletehabitByUser,
@@ -11,9 +10,8 @@ import {
 } from "@/src/services/todoServices";
 import { habitOutputType } from "@/src/types/habitTypes";
 import { todoOutputType } from "@/src/types/todoTypes";
-import { wasCompletedYesterday } from "@/src/utils/dateTimeUtils";
+import { formatDate } from "@/src/utils/dateTimeUtils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { serverTimestamp } from "firebase/firestore";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { toast } from "sonner";
 
@@ -27,8 +25,8 @@ type ToggleButtonProps = {
   todoId?: string;
   habitId?: string;
   streak?: number;
-  lastCompleted?: FirestoreTimestamp;
-  timeRequired?: number;
+  lastCompleted?: string | null;
+  timeRequired: number;
 };
 
 export const ToggleButton = ({
@@ -48,24 +46,20 @@ export const ToggleButton = ({
   const toggleTaskMutation = useMutation({
     mutationKey: ["toggle-task"],
     mutationFn: async (newStatus: boolean) => {
-      if (taskType === "habit" && habitId && lastCompleted) {
-        const currentStreak =
-          typeof streak === "number" && wasCompletedYesterday(lastCompleted)
-            ? streak
-            : 0;
-        const newStreak = newStatus ? currentStreak + 1 : currentStreak - 1;
-        await incrementUserXp({userId, isIncrementing: newStatus})
-        return await updateHabitByUser(
-          {
-            streak: newStreak,
-            lastCompleted: serverTimestamp(),
-          },
+      if (taskType === "habit" && habitId && lastCompleted !== undefined && streak !== undefined) {
+        await incrementUserXp({ userId, isIncrementing: newStatus });
+        return await updateHabitByUser({
           userId,
-          habitId
-        );
+          habitId,
+          todayDateKey: formatDate(new Date()),
+          status: newStatus,
+          timeRequired,
+          streak,
+          lastCompleted,
+        });
       }
-      if (taskType === "todo" && goalId && dueBy && todoId && timeRequired) {
-        await incrementUserXp({userId, isIncrementing: newStatus})
+      if (taskType === "todo" && goalId && dueBy && todoId) {
+        await incrementUserXp({ userId, isIncrementing: newStatus });
         return await updateTodoByUser(
           { status: newStatus },
           userId,

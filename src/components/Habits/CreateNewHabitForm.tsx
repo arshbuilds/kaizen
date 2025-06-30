@@ -13,6 +13,7 @@ import FormDropdown from "../ui/dropdown";
 const habitSchema = z.object({
   title: z.string().min(1, "Please enter a valid title"),
   category: z.string(),
+  timeRequired: z.number().min(1),
 });
 
 type HabitForm = z.infer<typeof habitSchema>;
@@ -23,11 +24,23 @@ const CreateNewHabitForm = ({ onClose }: { onClose: () => void }) => {
   const queryKey = "habits";
   const { register, handleSubmit, control } = useForm<HabitForm>({
     resolver: zodResolver(habitSchema),
+    defaultValues: { timeRequired: 5 },
   });
 
   const addHabitMutation = useMutation({
-    mutationFn: ({ title, category }: { title: string; category: string }) =>
-      addHabitByUser({ formData:{title, category }, userId: user!.userId}),
+    mutationFn: ({
+      title,
+      category,
+      timeRequired,
+    }: {
+      title: string;
+      category: string;
+      timeRequired: number;
+    }) =>
+      addHabitByUser({
+        formData: { title, category, timeRequired },
+        userId: user!.userId,
+      }),
     onMutate: async (title) => {
       await queryClient.cancelQueries({ queryKey: [queryKey] });
       const prevData = queryClient.getQueryData([queryKey]);
@@ -50,7 +63,11 @@ const CreateNewHabitForm = ({ onClose }: { onClose: () => void }) => {
   });
 
   const onSubmit = (data: HabitForm) => {
-    addHabitMutation.mutate({ title: data.title, category: data.category });
+    addHabitMutation.mutate({
+      title: data.title,
+      category: data.category,
+      timeRequired: data.timeRequired,
+    });
     onClose();
   };
 
@@ -63,6 +80,16 @@ const CreateNewHabitForm = ({ onClose }: { onClose: () => void }) => {
           required
           name="name"
           placeholder="e.g., Meditate for 10 minutes"
+          className="w-full rounded-lg border border-slate-600/60 bg-slate-700/60 px-4 py-2 placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
+        />
+      </div>
+      <div>
+        <label className="mb-1 block font-medium">Time Required</label>
+        <input
+          {...register("timeRequired", { valueAsNumber: true })}
+          required
+          name="timeRequired"
+          placeholder="5"
           className="w-full rounded-lg border border-slate-600/60 bg-slate-700/60 px-4 py-2 placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
         />
       </div>
@@ -94,7 +121,6 @@ const CreateNewHabitForm = ({ onClose }: { onClose: () => void }) => {
           + Create Habit
         </button>
       </div>
-      
     </form>
   );
 };

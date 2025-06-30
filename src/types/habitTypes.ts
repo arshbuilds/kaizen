@@ -5,9 +5,10 @@ export type habitOutputType = {
   title: string;
   streak: number;
   status: boolean;
-  lastCompleted: FirestoreTimestamp;
+  lastCompleted: string|null;
   createdAt: FirestoreTimestamp;
   category: string;
+  timeRequired: number
 };
 
 export type habitInputType = Omit<habitOutputType, "status">;

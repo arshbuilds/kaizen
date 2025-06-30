@@ -74,7 +74,7 @@ export const HabitTaskItem = ({
   data: habitOutputType;
   queryKey: string;
 }) => {
-  const { title, status, habitId, streak, lastCompleted } = data;
+  const { title, status, habitId, streak, lastCompleted, timeRequired } = data;
   const { user } = useAuth();
   return (
     <li className="bg-[#262636] border-l-4 rounded-lg p-2 flex items-center my-2 min-h-28">
@@ -88,6 +88,7 @@ export const HabitTaskItem = ({
           streak={streak}
           lastCompleted={lastCompleted}
           queryKey={queryKey}
+          timeRequired={timeRequired}
         />
       </div>
 

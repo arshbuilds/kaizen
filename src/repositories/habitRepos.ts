@@ -12,8 +12,7 @@ import {
   habitOutputType,
   partialHabitType,
 } from "../types/habitTypes";
-import { isToday } from "date-fns";
-import { convertToDate } from "../utils/dateTimeUtils";
+import { isToday, isValid, parseISO } from "date-fns";
 
 //CREATE a new user Habit
 type addUserHabitParams = {
@@ -37,13 +36,15 @@ type getUserHabitParams = {
 export const getUserHabitsData = async (params: getUserHabitParams) => {
   const data: Array<habitOutputType> = [];
   const collectionRef = collection(db, `/users/${params.userId}/habits`);
-
   const querySnapshot = await getDocs(collectionRef);
   querySnapshot.forEach((doc) => {
-    let status;
-    const date = convertToDate(doc.data().lastCompleted);
-    if (date !== null) {
-      status = isToday(date);
+    let status = false;
+    const lastCompleted = doc.data().lastCompleted as string | null | undefined;
+    if (lastCompleted) {
+      const date = parseISO(doc.data().lastCompleted);
+      if (isValid(date) && isToday(date)) {
+        status = true;
+      }
     }
     data.push({ habitId: doc.id, status, ...doc.data() } as habitOutputType);
   });

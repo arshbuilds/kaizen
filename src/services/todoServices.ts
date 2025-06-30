@@ -1,21 +1,13 @@
 import {
-  arrayRemove,
-  arrayUnion,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
-import {
   addUserTodo,
   deleteUserTodo,
   getUserTodosData,
   updateUserTodo,
 } from "../repositories/todoRepos";
 import { partialtodoOutputType, todoInputType } from "../types/todoTypes";
-import { db } from "../lib/firebase";
 import { formatDate } from "../utils/dateTimeUtils";
-import { incrementAndDecrementGoalValues} from "./goalServices";
+import { incrementAndDecrementGoalValues } from "./goalServices";
+import { updateDailyStat } from "./progressServices";
 
 export const addTodoByUser = async (
   formData: Omit<todoInputType, "status">,
@@ -63,44 +55,20 @@ export const updateTodoByUser = async (
   timeRequired: number
 ) => {
   try {
-    const dailyStatRef = doc(
-      db,
-      `users/${userId}/dailyStats/${formatDate(new Date())}`
-    );
-    const docSnapshot = await getDoc(dailyStatRef);
-    if (docSnapshot.exists()) {
-      if (data.status) {
-        await incrementAndDecrementGoalValues({userId, goalId, timeTaken: timeRequired, status: true})
-        await updateDoc(dailyStatRef, {
-          doneCount: docSnapshot.data().doneCount + 1,
-          taskIdsDone: arrayUnion(todoId),
-          notDoneCount: docSnapshot.data().notDoneCount - 1,
-          totalTimeSpent: docSnapshot.data().totalTimeSpent + timeRequired,
-          taskIdsMissed: arrayRemove(todoId),
-        });
-      } else {
- 
-        await incrementAndDecrementGoalValues({userId, goalId, timeTaken: timeRequired, status: false})
-        await updateDoc(dailyStatRef, {
-          doneCount: docSnapshot.data().doneCount - 1,
-          taskIdsDone: arrayRemove(todoId),
-          notDoneCount: docSnapshot.data().notDoneCount + 1,
-          totalTimeSpent: docSnapshot.data().totalTimeSpent - timeRequired,
-          taskIdsMissed: arrayUnion(todoId),
-        });
-      }
-    } else {
-      await setDoc(dailyStatRef, {
-        date: formatDate(new Date()),
-        doneCount: 0,
-        notDoneCount: 0,
-        taskIdsDone: [],
-        taskIdsMissed: [],
-        timeSpentByCategory: {},
-        timeSpentPerTimeOfDay: {},
-        totalTimeSpent: 0,
-      });
-    }
+    if (!data.status) return;
+    await incrementAndDecrementGoalValues({
+      userId,
+      goalId,
+      timeTaken: timeRequired,
+      status: data.status,
+    });
+    await updateDailyStat({
+      date: formatDate(new Date()),
+      taskId: todoId,
+      userId,
+      timeRequired,
+      status: data.status,
+    });
     await updateUserTodo({ data, userId, goalId, dueBy, todoId });
   } catch (e) {
     console.error("Some error occured:", e);

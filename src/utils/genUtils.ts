@@ -97,7 +97,6 @@ export const modifyForNonTop3 = ({
 }) => {
   const tail = docs.slice(3); 
   const userDoc = docs.find((d)=> d.userId === userId)
-  console.log(userDoc)
   const tailWithoutUser = tail.filter((d) => d.userId !== userId);
   return [userDoc, ...tailWithoutUser];
 };

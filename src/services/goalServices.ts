@@ -51,7 +51,7 @@ export const addGoalByUser = async ({
       totalTodos,
       doneTodos: 0,
       timeSpent: 0,
-      isCompleted: false
+      isCompleted: false,
     };
     await setDoc(docRef, data);
   } catch (e) {
@@ -90,19 +90,12 @@ export const incrementAndDecrementGoalValues = async ({
   status: boolean;
 }) => {
   try {
-    if (status) {
-      const docRef = doc(db, `users/${userId}/goals/${goalId}`);
-      await updateDoc(docRef, {
-        doneTodos: increment(1),
-        timeSpent: increment(timeTaken),
-      });
-    } else {
-      const docRef = doc(db, `users/${userId}/goals/${goalId}`);
-      await updateDoc(docRef, {
-        doneTodos: increment(-1),
-        timeSpent: increment(-timeTaken),
-      });
-    }
+    const delta = status ? 1 : -1;
+    const docRef = doc(db, `users/${userId}/goals/${goalId}`);
+    await updateDoc(docRef, {
+      doneTodos: increment(delta),
+      timeSpent: increment(status ? timeTaken : -timeTaken),
+    });
   } catch (e) {
     console.error(e);
     throw e;

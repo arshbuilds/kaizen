@@ -10,7 +10,7 @@ import { uploadTasksForGoals } from "@/src/services/goalServices";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { Clock, Pencil} from "lucide-react";
+import { Clock, Pencil } from "lucide-react";
 
 const habitSchema = z.object({
   title: z.string().min(1, "Please enter a valid title"),
@@ -28,7 +28,6 @@ const GetTodosFromPrompt = () => {
   const { register, handleSubmit } = useForm<HabitForm>({
     resolver: zodResolver(habitSchema),
   });
-  let savingToastId: string | number | undefined;
   const addGoalAndTasks = useMutation({
     mutationFn: async (data: HabitForm) => {
       const tasks = await getTasksFromPrompt(data.description, data.weeks);
@@ -38,22 +37,22 @@ const GetTodosFromPrompt = () => {
         data.title,
         data.tags,
         data.description,
-        data.weeks,
+        data.weeks
       );
     },
-    onMutate:() => {
-     savingToastId = toast.loading("adding goal")
+    onMutate: () => {
+      toast.loading("adding goal");
     },
     onSuccess: () => {
-queryClient.invalidateQueries({queryKey: ["goals"]})
-      toast.dismiss(savingToastId)
+      queryClient.invalidateQueries({ queryKey: ["goals"] });
+      toast.dismiss();
       toast.success("Goal Added succesfully");
     },
-    onError:(_err) => {
-      console.error(_err)
-      toast.error("Some error occured")
-      throw _err
-    }
+    onError: (_err) => {
+      console.error(_err);
+      toast.error("Some error occured");
+      throw _err;
+    },
   });
 
   const onSubmit = (data: HabitForm) => {

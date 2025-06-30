@@ -33,6 +33,7 @@ const Today = () => {
     return <Loading />;
   }
   if (goalsQuery.isError || habitsQuery.isError) {
+    console.error(goalsQuery.error, habitsQuery.error)
     return <>Some error occured</>;
   }
 

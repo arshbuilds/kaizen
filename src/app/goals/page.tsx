@@ -52,6 +52,16 @@ const Goals = () => {
             No goals yet, create one now
           </Link>
         )}
+        {data?.length ? (
+          <Link
+            href="/goals/new"
+            className="block text-center mx-auto bg-[#492072] py-2 px-4 rounded-xl text-white"
+          >
+            Create new goal
+          </Link>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

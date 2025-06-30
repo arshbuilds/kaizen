@@ -5,6 +5,7 @@ import { getHabitsByUser } from "@/src/services/habitServices";
 import { formatDate } from "@/src/utils/dateTimeUtils";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../Loading/Loading";
+import { addConsistencyDateData } from "@/src/services/progressServices";
 
 export const TasksGate = ({ children }: { children: React.ReactNode }) => {
 
@@ -16,12 +17,13 @@ export const TasksGate = ({ children }: { children: React.ReactNode }) => {
       const data = await getTodaysTasks(user!.userId, dueBy);
       return data;
     },
-    
   });
   const habitsQuery = useQuery({
     queryKey: ["habits"],
     queryFn: async () => {
       const data = await getHabitsByUser(user!.userId);
+      const taskIds = data.map(({ habitId }) => habitId); 
+      await addConsistencyDateData({userId: user!.userId, date: formatDate(new Date()), totalTasks: data.length, taskIds: taskIds})
       return data;
     },
   });
@@ -31,6 +33,5 @@ export const TasksGate = ({ children }: { children: React.ReactNode }) => {
   if (goalsQuery.isError || habitsQuery.isError) {
     return <>Some error occured</>;
   }
-
   return <>{children}</>;
 };

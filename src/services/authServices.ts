@@ -82,6 +82,7 @@ export const loginWithGoogle = async (): Promise<userType> => {
         formData: {
           title: "Meditate 10 minutes",
           category: "🏥 Health",
+          timeRequired: 10
         },
         userId: user.uid,
       });
@@ -89,6 +90,7 @@ export const loginWithGoogle = async (): Promise<userType> => {
         formData: {
           title: "Read 30 minutes",
           category: "📚 Learning",
+          timeRequired: 30
         },
         userId: user.uid,
       });
@@ -149,6 +151,7 @@ export const signupWithEmailPass = async ({
       formData: {
         title: "Meditate 10 minutes",
         category: "🏥 Health",
+        timeRequired: 10
       },
       userId: user.uid,
     });
@@ -156,6 +159,7 @@ export const signupWithEmailPass = async ({
       formData: {
         title: "Read 30 minutes",
         category: "📚 Learning",
+        timeRequired: 30
       },
       userId: user.uid,
     });
