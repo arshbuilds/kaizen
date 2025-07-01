@@ -59,6 +59,7 @@ export const ToggleButton = ({
         });
       }
       if (taskType === "todo" && goalId && dueBy && todoId) {
+        console.log("in")
         await incrementUserXp({ userId, isIncrementing: newStatus });
         return await updateTodoByUser(
           { status: newStatus },

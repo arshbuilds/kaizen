@@ -52,7 +52,7 @@ const ProfileSettings = () => {
     },
     onError: (err) => {
       toast.error("Some error occured");
-      console.error("Login error", err);
+      console.error("update error", err);
     },
   });
 

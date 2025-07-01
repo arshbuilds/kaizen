@@ -238,6 +238,7 @@ export const incrementUserXp = async ({
   isIncrementing: boolean;
 }) => {
   try {
+    console.log("in2 ")
     const userRef = doc(db, `users/${userId}`);
     if (isIncrementing) {
       await updateDoc(userRef, {

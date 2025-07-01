@@ -2,71 +2,51 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "../stores/useAuthStore";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { useEffect } from "react";
 
 export const useUserData = () => {
-  
-  const hasFetchedUser = useAuthStore((state) => state.hasFetchedUser)
-  const setUser = useAuthStore((state) => state.setUser)
-  const setLoading = useAuthStore((state) => state.setLoading)
-  const setHasFetchedUser = useAuthStore((state) => state.setHasFetchedUser)
- 
+  const setUser           = useAuthStore(s => s.setUser);
+  const setLoading        = useAuthStore(s => s.setLoading);
+  const setHasFetchedUser = useAuthStore(s => s.setHasFetchedUser);
+
   const router = useRouter();
 
   useEffect(() => {
-    if (hasFetchedUser) {
-      return;
-    }
-
     setLoading(true);
 
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        try {
-          const userDocRef = doc(db, "users", firebaseUser.uid);
-          const userSnap = await getDoc(userDocRef);
-
-          if (userSnap.exists()) {
-            const data = userSnap.data();
-            setUser({
-              userId: firebaseUser.uid,
-              userName: data.userName,
-              email: data.email,
-              pfpUrl: data.pfpUrl,
-              role: data.role,
-              interests: data.interests,
-              createdAt: data.createdAt,
-              goals: data.goals,
-              followersCount: data.followersCount,
-              followingCount: data.followingCount,
-              goalsCount: data.goalsCount,
-              dayStreak: data.dayStreak,
-              meditationHours: data.meditationHours,
-              badgesCount: data.badgesCount,
-              bestStreak: data.bestStreak,
-              totalCoins: data.totalCoins,
-              weeklyCoins: data.weeklyCoins,
-              todayCoins: data.todayCoins,
-              percentileRank: data.percentileRank,
-              xp: data.xp,
-              streakLastUpdated: data.streakLastUpdated
-            });
-          } else {
-            console.warn("No user doc found!");
-          }
-        } catch (err) {
-          console.error("Error fetching user data:", err);
-        }
-      } else {
+    const unsubscribeAuth = onAuthStateChanged(auth, firebaseUser => {
+      if (!firebaseUser) {
         setUser(null);
-        router.push("/enter");
+        setLoading(false);
+        router.push('/enter');
+        return;
       }
 
-      setHasFetchedUser(true);
-      setLoading(false);
+      // LIVE LISTENER on the user doc ↓↓↓
+      const unsubscribeUserDoc = onSnapshot(
+        doc(db, 'users', firebaseUser.uid),
+        snap => {
+          if (snap.exists()) {
+            setUser({ userId: firebaseUser.uid, ...snap.data() });
+          } else {
+            console.warn('No user doc found!');
+            setUser(null);
+          }
+          setHasFetchedUser(true);
+          setLoading(false);
+        },
+        err => {
+          console.error('Error listening user doc', err);
+          setLoading(false);
+        }
+      );
+
+      // When auth state changes again → stop listening to old doc
+      return unsubscribeUserDoc;
     });
 
-    return () => unsubscribe();
-  }, [hasFetchedUser, setUser, setLoading, setHasFetchedUser, router]);
+    // Clean up on unmount
+    return () => unsubscribeAuth();
+  }, [router, setUser, setLoading, setHasFetchedUser]);
 };

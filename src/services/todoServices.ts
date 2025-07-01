@@ -55,7 +55,7 @@ export const updateTodoByUser = async (
   timeRequired: number
 ) => {
   try {
-    if (!data.status) return;
+    if(data.status === undefined) return
     await incrementAndDecrementGoalValues({
       userId,
       goalId,
