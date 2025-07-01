@@ -157,7 +157,7 @@ export const uploadTasksForGoals = async (
         timeSpentPerTimeOfDay: {},
         totalTimeSpent: 0,
       };
-      batch.set(dailyStatRef, dailyStatData);
+      batch.set(dailyStatRef, dailyStatData, {merge: true});
     }
   }
 

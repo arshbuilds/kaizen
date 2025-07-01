@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "62250180001",
+    "project_id": "kaizen-b8806",
+    "storage_bucket": "kaizen-b8806.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62250180001:android:dd62354b22aebdb25f3fe0",
+        "android_client_info": {
+          "package_name": "com.kaizen.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62250180001-50eh0uk132j1emq7j3kujrnblltl1ti2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kaizen.app",
+            "certificate_hash": "c2e8fa41e3a4ebb819d1ee3268e9eb833e6f51ce"
+          }
+        },
+        {
+          "client_id": "62250180001-fnr7e79qgbmgas24ngg379p6kq68jmps.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBp-zL32Vzo5maUk2x77NswbiL4xfvvV_k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62250180001-fnr7e79qgbmgas24ngg379p6kq68jmps.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

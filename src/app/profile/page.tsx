@@ -39,6 +39,8 @@ const Profile = () => {
     <div className="min-h-screen p-4 mx-auto pb-24">
       <div className="space-y-6">
         <UserData
+          name={user.userName}
+          role={user.role}
           pfpUrl={user.pfpUrl}
           createdAt={user.createdAt}
           interests={user.interests}

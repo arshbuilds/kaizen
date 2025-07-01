@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useAuth } from "@/src/hooks/useAuth";
 import { updateUserData } from "@/src/services/authServices";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,15 +8,6 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-
-const allIds = [
-  "fitness",
-  "finance",
-  "learning",
-  "creativity",
-  "mindfulness",
-  "career",
-] as const;
 
 const tiles = [
   { id: "fitness", emoji: "💪", label: "Fitness" },
@@ -30,17 +21,21 @@ const tiles = [
 const ProfileSettingsSchema = z.object({
   name: z.string(),
   role: z.string(),
-  interests: z.array(z.enum(allIds)),
-  theme: z.string(z.enum(["dark", "light"])),
+  interests: z.string().array(),
 });
 
 type ProfileSettingsFormType = z.infer<typeof ProfileSettingsSchema>;
 
 const ProfileSettings = () => {
   const { user } = useAuth();
-  const { register, handleSubmit, watch } = useForm<ProfileSettingsFormType>({
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<ProfileSettingsFormType>({
     resolver: zodResolver(ProfileSettingsSchema),
-    defaultValues: { interests: [], name: user?.userName, role: user?.role },
+    defaultValues: { interests: user!.interests, name: user?.userName, role: user?.role },
   });
 
   const saveSettingsMutation = useMutation({
@@ -49,30 +44,35 @@ const ProfileSettings = () => {
     }: {
       data: { name: string; interests: string[]; role: string };
     }) => {
+      console.log(data);
       return await updateUserData({ userId: user!.userId, data });
     },
     onSuccess: () => {
-      toast.success("Login successfull")
+      toast.success("Information updated sucessfully");
     },
-      onError: (err) => {
-      toast.error("Some error occured")
+    onError: (err) => {
+      toast.error("Some error occured");
       console.error("Login error", err);
-    }
+    },
   });
 
   const selected = watch("interests");
   const onSubmit = (data: ProfileSettingsFormType) => {
-    saveSettingsMutation.mutate({data})
+    saveSettingsMutation.mutate({ data });
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {/* Field 1 */}
+      {errors.interests && <>{errors.interests.message}</>}
+      {errors.name && <>{errors.name.message}</>}
+      {errors.role && <>{errors.role.message}</>}
       <div className="bg-[#1a2332] backdrop-blur-sm border border-slate-700/50 rounded-xl p-3">
         <h3 className="text-white font-semibold mb-3 px-3">Username</h3>
         <input
           {...register("name")}
           type="text"
+          name="name"
           placeholder="e.g. Start a YouTube Channel"
           className="w-full bg-slate-700/50 text-white placeholder-gray-400 border border-slate-600 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
@@ -83,6 +83,7 @@ const ProfileSettings = () => {
         <input
           {...register("role")}
           type="text"
+          name="role"
           placeholder="e.g. mindfulness explorer"
           className="w-full bg-slate-700/50 text-white placeholder-gray-400 border border-slate-600 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />

@@ -262,6 +262,7 @@ export const updateUserData = async ({
   data: { name: string; interests: string[]; role: string };
 }) => {
   try {
+    console.log("in", data)
     const userRef = doc(db, `users/${userId}`);
     await updateDoc(userRef, data);
   } catch (e) {

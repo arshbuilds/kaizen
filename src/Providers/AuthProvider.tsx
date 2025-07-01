@@ -2,6 +2,7 @@
 import { ReactNode } from "react";
 import { useUserData } from "../hooks/useUserData";
 import { useAuthStore } from "../stores/useAuthStore";
+import Loading from "../components/Loading/Loading";
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
   useUserData();
@@ -9,9 +10,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-xl font-semibold">Loading...</p>
-      </div>
+   <Loading/>
     );
   }
 

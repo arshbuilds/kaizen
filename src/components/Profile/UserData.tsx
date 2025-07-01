@@ -6,24 +6,26 @@ import { getYearFromTimestamp } from "@/src/lib/date";
 import { InterestTag } from "../ui/tags";
 import Link from "next/link";
 
-type userProps = {
-  pfpUrl: string;
-  createdAt: FirestoreTimestamp;
-  interests: Array<string>;
-  followers: number;
-  // type AchievementsProps
-  following: number;
-  goals: number;
-};
-
 const UserData = ({
   pfpUrl,
   createdAt,
   interests,
-  // followers,
-  // following,
-  // goals,
-}: userProps) => {
+  name,
+  role,
+}: // followers,
+// following,
+// goals,
+{
+  pfpUrl: string;
+  createdAt: FirestoreTimestamp;
+  interests: Array<string>;
+  followers: number;
+  name: string;
+  role: string;
+  // type AchievementsProps
+  following: number;
+  goals: number;
+}) => {
   const year = getYearFromTimestamp(createdAt);
   return (
     <div className="rounded-xl my-4 bg-[#1a2332] p-6 text-white">
@@ -56,8 +58,8 @@ const UserData = ({
 
         {/* User Info */}
         <div className="mt-6 text-center">
-          <h2 className="text-xl font-semibold text-white">Trinity Mitchell</h2>
-          <p className="text-gray-400">Mindfulness Explorer</p>
+          <h2 className="text-xl font-semibold text-white">{name}</h2>
+          <p className="text-gray-400">{role}</p>
         </div>
 
         {/* User Details */}

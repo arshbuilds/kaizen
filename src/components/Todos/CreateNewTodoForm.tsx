@@ -12,7 +12,7 @@ import { partialtodoOutputType, todoOutputType } from "@/src/types/todoTypes";
 import FormDropdown from "../ui/dropdown";
 
 const addTodoSchema = z.object({
-  title: z.string().min(1, "please enter a valid title"),
+  title: z.string(),
   description: z.string(),
   priority: z.enum(["low", "medium", "high"]),
   goalId: z.string().nonempty(),
@@ -24,7 +24,7 @@ const CreateNewTodoForm = ({ onClose }: { onClose: () => void }) => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const queryKey = "todos";
-  const { register, handleSubmit, control } = useForm<todoForm>({
+  const { register, handleSubmit, control, formState:{errors} } = useForm<todoForm>({
     resolver: zodResolver(addTodoSchema),
   });
   const addTodoMutation = useMutation({
@@ -81,11 +81,15 @@ const CreateNewTodoForm = ({ onClose }: { onClose: () => void }) => {
         <input
           {...register("title")}
           required
-          name="name"
+          name="title"
           placeholder="e.g., Review project proposal"
           className="w-full rounded-lg border border-slate-600/60 bg-slate-700/60 px-4 py-2 placeholder:text-slate-500 focus:border-violet-500 focus:outline-none"
         />
       </div>
+      {errors.description && <>{errors.description.message}</>}
+      {errors.goalId && <>{errors.goalId.message}</>}
+      {errors.title && <>{errors.title.message}</>}
+      {errors.priority && <>{errors.priority.message}</>}
 
       {/* Description */}
       <div>
@@ -116,7 +120,7 @@ const CreateNewTodoForm = ({ onClose }: { onClose: () => void }) => {
         </div>
 
         <div>
-          <label className="mb-1 block font-medium">Category</label>
+          <label className="mb-1 block font-medium">Goal</label>
           <Controller
             control={control}
             name="goalId"
@@ -132,14 +136,12 @@ const CreateNewTodoForm = ({ onClose }: { onClose: () => void }) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-3 pt-2">
-        <button
-          type="submit"
-          className="flex-1 rounded-md bg-gradient-to-r from-violet-500 to-pink-500 px-6 py-3 font-medium text-white hover:opacity-90"
-        >
-          + Create Task
-        </button>
-      </div>
+      <button
+        type="submit"
+        className="flex-1 rounded-md bg-gradient-to-r from-violet-500 to-pink-500 px-6 py-3 font-medium text-white hover:opacity-90"
+      >
+        + Create Task
+      </button>
     </form>
   );
 };

@@ -1,6 +1,5 @@
 import { Card } from "@/components/ui/card";
 import { HeartPlus } from "lucide-react";
-import { FaCalendar } from "react-icons/fa";
 import { SlBookOpen } from "react-icons/sl";
 
 const HomeTasks = () => {

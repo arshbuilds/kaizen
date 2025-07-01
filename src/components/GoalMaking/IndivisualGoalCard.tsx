@@ -12,7 +12,7 @@ const IndivisualGoalCard = ({ docData }: { docData: goalOutputType }) => {
     addWeeks(createdAt!, docData.weeks),
     new Date()
   );
-  const progress = (docData.doneTodos / 100) * docData.totalTodos;
+  const progress = Math.round((docData.doneTodos / 100) * docData.totalTodos);
   // const progress = 100;
   return (
     <div className="bg-[#262636] border-slate-700 border-2 p-6 rounded-2xl mx-auto text-white relative ">
@@ -75,7 +75,8 @@ const IndivisualGoalCard = ({ docData }: { docData: goalOutputType }) => {
           <span className="font-medium">{daysBetween} days left</span>
         </div>
       </div>
-      {progress === 100 && (
+      {docData.isCompleted && <span className="bg-green-700 text-green-400 rounded-xl text-xs my-1 py-0.5 px-1">• completed</span>}
+      {!docData.isCompleted && progress === 100 && (
         <div className="mt-3">
           <Link
             href={`/goals/completed?id=${docData.goalId}`}
