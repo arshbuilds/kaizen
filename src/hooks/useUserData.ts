@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "../stores/useAuthStore";
-import { onAuthStateChanged, onIdTokenChanged } from "firebase/auth";
+import { onIdTokenChanged } from "firebase/auth";
 import { auth, db } from "../lib/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useEffect } from "react";

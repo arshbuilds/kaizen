@@ -5,7 +5,6 @@ import {
   signInWithPopup,
   signOut,
   signInWithCredential,
-  onIdTokenChanged,
 } from "firebase/auth";
 import { auth, db } from "../lib/firebase";
 import { useAuthStore } from "../stores/useAuthStore";
