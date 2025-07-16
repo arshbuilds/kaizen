@@ -1,10 +1,10 @@
 import React from "react";
-import Image from "next/image";
-import { FaArrowLeft, FaCamera } from "react-icons/fa";
 import { FirestoreTimestamp } from "@/src/lib/firebase";
 import { getYearFromTimestamp } from "@/src/lib/date";
 import { InterestTag } from "../ui/tags";
 import Link from "next/link";
+import { Cog } from "lucide-react";
+import PfpUploader from "./PfpUploader";
 
 const UserData = ({
   pfpUrl,
@@ -28,33 +28,18 @@ const UserData = ({
 }) => {
   const year = getYearFromTimestamp(createdAt);
   return (
-    <div className="rounded-xl my-4 bg-[#1a2332] p-6 text-white">
+    <div className="rounded-xl my-4 p-6 bg-[#2e2d48]/20 text-white shadow-lg shadow-[#222952]">
       <span className="text-gray-400 text-sm">
         <Link
-          href={"/"}
-          className="absolute left-10 top-10 flex items-center gap-1"
+          href={"/profile/settings"}
+          className="absolute right-5 top-10 flex items-center gap-1"
         >
-          <FaArrowLeft />
-          Back
+          <Cog />
         </Link>
       </span>
       <div className="flex flex-col items-center">
         {/* Profile Image with Camera Icon */}
-        <div className="relative">
-          <div className="h-24 w-24 overflow-hidden rounded-md">
-            <Image
-              width={100}
-              height={100}
-              alt="Profile Picture"
-              src={pfpUrl}
-            />
-          </div>
-          <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 transform">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#6c5ce7]">
-              <FaCamera className="h-5 w-5 text-white" />
-            </div>
-          </div>
-        </div>
+        <PfpUploader pfpUrl={pfpUrl} />
 
         {/* User Info */}
         <div className="mt-6 text-center">

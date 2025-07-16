@@ -63,7 +63,7 @@ const BarGraph = ({ data }: {data:MonthStats}) => {
     },
   };
 
-  return <Bar className="bg-[#262636] border border-purple-400/30 p-4 my-4 rounded-xl" data={barData} options={options} />;
+  return <Bar className="border border-purple-400/30 p-4 my-4 rounded-xl bg-[#2e2d48]/20 text-white shadow-lg shadow-[#222952] " data={barData} options={options} />;
 };
 
 export default BarGraph;

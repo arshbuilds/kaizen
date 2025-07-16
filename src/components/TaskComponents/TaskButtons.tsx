@@ -59,7 +59,6 @@ export const ToggleButton = ({
         });
       }
       if (taskType === "todo" && goalId && dueBy && todoId) {
-        console.log("in")
         await incrementUserXp({ userId, isIncrementing: newStatus });
         return await updateTodoByUser(
           { status: newStatus },
@@ -118,12 +117,12 @@ export const ToggleButton = ({
   return (
     <button
       className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-        completionStatus ? "border-blue-500" : "border-gray-400"
+        completionStatus ? "border-green-500" : "border-gray-400"
       }`}
       onClick={onClick}
     >
       {completionStatus && (
-        <div className="w-2.5 h-2.5 rounded-full bg-blue-500" />
+        <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
       )}
     </button>
   );

@@ -4,7 +4,7 @@ import React from "react";
 
 const Rising = ({ doc }: { doc: rankedUserType }) => {
   return (
-    <li className="flex w-full items-center gap-3 rounded-md bg-[#1b0d38] px-3 py-2 text-white">
+    <li className="flex w-full items-center gap-3 bg-[#1b0d38] px-3 py-2 text-white">
       {/* rank square */}
       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[#2f2f47] text-lg font-bold">
         #{doc.rank}

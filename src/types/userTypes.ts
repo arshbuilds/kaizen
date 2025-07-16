@@ -20,7 +20,6 @@ export type FollowingType = {
 export type userType = {
   userId: string;
   userName: string;
-  email: string;
   pfpUrl: string;
   role: string;
   interests: string[]; // e.g., ["Meditation", "Fitness"]

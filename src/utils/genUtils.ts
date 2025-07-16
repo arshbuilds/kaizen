@@ -30,10 +30,8 @@ export const modifyForBarGraph = (monthStats: MonthStats) => {
   const endDate = new Date();
   const year = endDate.getFullYear();
   const month = endDate.getMonth(); // 0-indexed
-
   for (let i = 7; i >= 0; i--) {
-    const date = new Date(year, month, endDate.getDate() - i);
-    if (date.getMonth() !== month) continue;
+    const date = new Date(year, month, endDate.getDate() + 3-i);
 
     const dayIndex = formatDate(date);
     const dayStats = monthStats[dayIndex];
@@ -43,10 +41,8 @@ export const modifyForBarGraph = (monthStats: MonthStats) => {
     const doneCount = dayStats.doneCount;
     const notDoneCount = dayStats.notDoneCount;
     const total = doneCount + notDoneCount;
-    if (total === 0) continue;
 
     const completionRate = Math.round((doneCount / total) * 100);
-
     result.weekDays.push(
       date.toLocaleDateString("en-US", { weekday: "short" })
     );
@@ -71,7 +67,7 @@ export const modifyForLineChart = ({
   const month = endDate.getMonth(); // 0-indexed
 
   for (let i = 7; i >= 0; i--) {
-    const date = new Date(year, month, endDate.getDate() - i);
+    const date = new Date(year, month, endDate.getDate() + 3 - i);
     if (date.getMonth() !== month) continue;
 
     const dayIndex = formatDate(date);

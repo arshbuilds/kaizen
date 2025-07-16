@@ -67,9 +67,9 @@ export const AchievementsCard = (props: {
   return (
     <div
       style={{
-        backgroundImage: `linear-gradient(to bottom, ${props.gradient.from} ,${props.gradient.to})`,
+        backgroundColor: `linear-gradient(to bottom, ${props.gradient.from} ,${props.gradient.to})`,
       }}
-      className="flex-1 bg-linear-to-b rounded-lg py-2 px-4 flex flex-col items-center justify-center"
+      className={"border flex-1 bg-linear-to-b rounded-lg py-2 px-4 flex flex-col items-center justify-center"}
     >
       <div className="text-2xl mb-2">
         <props.icon style={{ color: props.iconColor }} />

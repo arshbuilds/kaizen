@@ -9,9 +9,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const loading = useAuthStore((state) => state.loading);
 
   if (loading) {
-    return (
-   <Loading/>
-    );
+    return <Loading />;
   }
 
   return <>{children}</>;

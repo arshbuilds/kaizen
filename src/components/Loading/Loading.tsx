@@ -3,7 +3,7 @@ import styles from "./Loading.module.css";
 
 const Loading = () => {
   return (
-    <div className="min-h-screen flex justify-center items-center p-4 mx-auto pb-24">
+    <div className="min-h-screen flex justify-center items-center p-4 mx-auto pb-24 pt-12">
         <div className={styles.loader}></div>
     </div>
   );

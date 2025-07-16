@@ -36,7 +36,7 @@ const ProgressCard = () => {
   }
   const {totalTasks, doneTasks, progress} = getTodayProgress(habitsQuery!.data ?? [], goalsQuery!.data?? [])
   return (
-    <Card className="bg-[#262636] border-slate-700 p-6">
+    <Card className="bg-[#262636]/60 border-slate-700 p-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-white">Today&apos;s Progress</h2>
         <div className="relative w-16 h-16">

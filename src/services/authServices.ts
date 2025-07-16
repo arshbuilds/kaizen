@@ -4,6 +4,8 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signOut,
+  signInWithCredential,
+  onIdTokenChanged,
 } from "firebase/auth";
 import { auth, db } from "../lib/firebase";
 import { useAuthStore } from "../stores/useAuthStore";
@@ -14,17 +16,38 @@ import {
   increment,
   serverTimestamp,
   updateDoc,
+  writeBatch,
 } from "firebase/firestore";
 import { userType } from "../types/userTypes";
 import { addGoalByUser } from "./goalServices";
 import { addHabitByUser } from "./habitServices";
+import { Capacitor } from "@capacitor/core";
+import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
+import { toast } from "sonner";
 
 const provider = new GoogleAuthProvider();
+const platform = Capacitor.getPlatform();
 
 export const loginWithGoogle = async (): Promise<userType> => {
   try {
-    const result = await signInWithPopup(auth, provider);
+    let result;
+    if (platform === "android") {
+      result = await FirebaseAuthentication.signInWithGoogle();
+      if (result.credential?.idToken) {
+        const credential = GoogleAuthProvider.credential(
+          result.credential.idToken
+        );
+        await signInWithCredential(auth, credential);
+      }
+    } else {
+      result = await signInWithPopup(auth, provider);
+    }
+
     const user = result.user;
+    if (!user) {
+      console.error("sign in failed");
+      throw "some error occured";
+    }
     const pfpUrl = `https://api.dicebear.com/7.x/thumbs/svg?seed=${user.uid}`;
     const userDocRef = doc(db, "users", user.uid);
     const userSnap = await getDoc(userDocRef);
@@ -33,7 +56,6 @@ export const loginWithGoogle = async (): Promise<userType> => {
       const userData: userType = {
         userId: user.uid,
         userName: data.userName,
-        email: data.email,
         pfpUrl: data.pfpUrl,
         role: data.role,
         interests: data.interests,
@@ -54,10 +76,10 @@ export const loginWithGoogle = async (): Promise<userType> => {
       };
       return userData;
     } else {
+      const batch = writeBatch(db);
       const userData: userType = {
         userId: user.uid,
         userName: user.displayName!,
-        email: user.email!,
         pfpUrl: pfpUrl,
         role: "",
         interests: [],
@@ -77,31 +99,42 @@ export const loginWithGoogle = async (): Promise<userType> => {
         xp: 0,
         streakLastUpdated: serverTimestamp(),
       };
-      await addNewUser(userData);
-      await addHabitByUser({
-        formData: {
-          title: "Meditate 10 minutes",
-          category: "🏥 Health",
-          timeRequired: 10
-        },
-        userId: user.uid,
+      batch.set(doc(db, `users/${user.uid}`), userData);
+      const medRef = doc(db, `users/${user.uid}/habits/meditate-10-minutes`);
+      batch.set(medRef, {
+        title: "Meditate 10 minutes",
+        category: "🏥 Health",
+        timeRequired: 10,
+        createdAt: serverTimestamp(),
+        habitId: "meditate-10-minutes",
+        lastCompleted: null,
+        streak: 0,
       });
-      await addHabitByUser({
-        formData: {
-          title: "Read 30 minutes",
-          category: "📚 Learning",
-          timeRequired: 30
-        },
-        userId: user.uid,
+
+      const readRef = doc(db, `users/${user.uid}/habits/read-30-minutes`);
+      batch.set(readRef, {
+        title: "Read 30 minutes",
+        category: "📚 Learning",
+        timeRequired: 30,
+        createdAt: serverTimestamp(),
+        habitId: "read-30-minutes",
+        lastCompleted: null,
+        streak: 0,
       });
-      await addGoalByUser({
-        userId: user.uid,
+      const goalRef = doc(db, `users/${user.uid}/goals/general`);
+      batch.set(goalRef, {
+        goalId: "General",
         title: "general",
-        tags: "general",
         description: "General Todos",
+        createdAt: serverTimestamp(),
         weeks: 0,
+        tags: ["general"],
         totalTodos: 0,
+        doneTodos: 0,
+        timeSpent: 0,
+        isCompleted: false,
       });
+      await batch.commit();
       return userData;
     }
   } catch (e) {
@@ -126,7 +159,6 @@ export const signupWithEmailPass = async ({
     const userData: userType = {
       userId: user.uid,
       userName: username,
-      email: email,
       pfpUrl: pfpUrl,
       role: "",
       interests: [],
@@ -151,7 +183,7 @@ export const signupWithEmailPass = async ({
       formData: {
         title: "Meditate 10 minutes",
         category: "🏥 Health",
-        timeRequired: 10
+        timeRequired: 10,
       },
       userId: user.uid,
     });
@@ -159,7 +191,7 @@ export const signupWithEmailPass = async ({
       formData: {
         title: "Read 30 minutes",
         category: "📚 Learning",
-        timeRequired: 30
+        timeRequired: 30,
       },
       userId: user.uid,
     });
@@ -195,7 +227,6 @@ export const loginWithEmailPass = async ({
       const userData: userType = {
         userId: user.uid,
         userName: data.userName,
-        email: email,
         pfpUrl: data.pfpUrl,
         role: data.role,
         interests: data.interests,
@@ -238,7 +269,6 @@ export const incrementUserXp = async ({
   isIncrementing: boolean;
 }) => {
   try {
-    console.log("in2 ")
     const userRef = doc(db, `users/${userId}`);
     if (isIncrementing) {
       await updateDoc(userRef, {
@@ -260,13 +290,38 @@ export const updateUserData = async ({
   data,
 }: {
   userId: string;
-  data: { name: string; interests: string[]; role: string };
+  data: { userName: string; interests: string[]; role: string };
 }) => {
   try {
-    console.log("in", data)
     const userRef = doc(db, `users/${userId}`);
     await updateDoc(userRef, data);
   } catch (e) {
     console.error(e);
   }
 };
+
+export const updateUserProfile = async ({
+  userId,
+  pfpUrl,
+}: {
+  userId: string;
+  pfpUrl: string;
+}) => {
+  try {
+    const userRef = doc(db, `users/${userId}`);
+    await updateDoc(userRef, { pfpUrl });
+  } catch (e) {
+    console.error(e);
+    toast.error("Some error occured");
+    throw e;
+  }
+};
+
+// export const sendVerificationLink = async (email: string) => {
+//   try {
+
+//   } catch (e) {
+//     console.error(e);
+//     throw e;
+//   }
+// };

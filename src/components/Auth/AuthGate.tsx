@@ -2,6 +2,7 @@
 import { useAuthStore } from "@/src/stores/useAuthStore";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Loading from "../Loading/Loading";
 
 export const AuthGate = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuthStore();
@@ -14,7 +15,7 @@ export const AuthGate = ({ children }: { children: React.ReactNode }) => {
     }
   }, [user, loading, router, pathname]);
 
-  if (loading) return <div>fuck you</div>;
+  if (loading) return <Loading/>;
 
   return <>{children}</>;
 };

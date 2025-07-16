@@ -17,10 +17,25 @@
     call-me-maybe "^1.0.1"
     js-yaml "^4.1.0"
 
-"@capacitor/android@^7.4.0":
-  version "7.4.0"
-  resolved "https://registry.yarnpkg.com/@capacitor/android/-/android-7.4.0.tgz#f0d31b155b898b56895b55559e47e0b584ebacec"
-  integrity sha512-HVCQsnUobviGt/MR5qCfXsfkSyZ5gjJVW6Jbn0CI5NHhsvUkBtazGjaMjdt5JueIz1pfKXpiuZc/njfRHwjx6Q==
+"@capacitor-firebase/authentication@^7.2.0":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@capacitor-firebase/authentication/-/authentication-7.2.0.tgz#dc1ba18a06876881d1ede7ac7c9635c34c3e05ce"
+  integrity sha512-VI8Ib4DoBFTmvdUQVW0RqxB28mtaMtAogcxff5rGKnfISYMq+HrtMEIP5y9N3fytZvbi5NYvomXCiKy6cr8+6g==
+
+"@capacitor/android@^7.4.2":
+  version "7.4.2"
+  resolved "https://registry.yarnpkg.com/@capacitor/android/-/android-7.4.2.tgz#8fa1b6fbedfbb8506df3444dddaea75cc09ee8a9"
+  integrity sha512-FZ7M9NwFkljR7EP5eXiE32mAIfZNcYw2CzRMCG3rQu0u0ZaIoeOeq5/oK4YcDnGpNmu8jpngKJqZ+9OiSQSwDg==
+
+"@capacitor/app@^7.0.1":
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/@capacitor/app/-/app-7.0.1.tgz#0d0709fb4dde5046c24853f2d6b77a7ea411f748"
+  integrity sha512-ArlVZAAla4MwQoKh26x2AaTDOBh5Vhp1VhMKR3RwqZSsZnazKTFGNrPbr9Ez5r1knnEDfApyjwp1uZnXK1WTYQ==
+
+"@capacitor/camera@^7.0.1":
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/@capacitor/camera/-/camera-7.0.1.tgz#bcbd1c05cce648fa54b844bf7a6745854cae6ba4"
+  integrity sha512-gDUFsYlhMra5VVOa4iJV6+MQRhp3VXpTLQY4JDATj7UvoZ8Hv4DG8qplPL9ufUFNoR3QbDDnf8+gbQOsKdkDjg==
 
 "@capacitor/cli@^7.4.0":
   version "7.4.0"
@@ -45,10 +60,10 @@
     tslib "^2.8.1"
     xml2js "^0.6.2"
 
-"@capacitor/core@^7.4.0":
-  version "7.4.0"
-  resolved "https://registry.yarnpkg.com/@capacitor/core/-/core-7.4.0.tgz#19524c8a741e73dd247aa66329e446f211e95fd4"
-  integrity sha512-P6NnjoHyobZgTjynlZSn27d0SUj6j38inlNxFnKZr9qwU7/r6+0Sg2nWkGkIH/pMmXHsvGD8zVe6KUq1UncIjA==
+"@capacitor/core@^7.4.2":
+  version "7.4.2"
+  resolved "https://registry.yarnpkg.com/@capacitor/core/-/core-7.4.2.tgz#9ed8f4fe80a24c51c6969dbf44b70142d1e8eb91"
+  integrity sha512-akCf9A1FUR8AWTtmgGjHEq6LmGsjA2U7igaJ9PxiCBfyxKqlDbuGHrlNdpvHEjV5tUPH3KYtkze6gtFcNKPU9A==
   dependencies:
     tslib "^2.1.0"
 

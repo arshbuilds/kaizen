@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { CiHome, CiSquareCheck } from "react-icons/ci";
 import { FiTarget } from "react-icons/fi";
-import { FaChartBar } from "react-icons/fa";
+import { FaRankingStar } from "react-icons/fa6";
 import { FaUserAlt } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -14,7 +14,7 @@ export default function Navbar({ hidden }: { hidden: string[] }) {
     { icon: CiHome, label: "Home", path: "/" },
     { icon: CiSquareCheck, label: "Tasks", path: "/today" },
     { icon: FiTarget, label: "Goals", path: "/goals" },
-    { icon: FaChartBar, label: "Analytics", path: "/progress" },
+    { icon: FaRankingStar, label: "leaderboard", path: "/leaderboard" },
     { icon: FaUserAlt, label: "Profile", path: "/profile" },
   ];
   return (

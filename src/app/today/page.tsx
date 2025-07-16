@@ -5,7 +5,7 @@ import {
   TodoTaskItemMapper,
 } from "@/src/components/TaskComponents/TaskItemMapper";
 import { useAuth } from "@/src/hooks/useAuth";
-import { getTodaysTasks} from "@/src/services/goalServices";
+import { getTodaysTasks } from "@/src/services/goalServices";
 import { getHabitsByUser } from "@/src/services/habitServices";
 import { formatDate } from "@/src/utils/dateTimeUtils";
 import { useQuery } from "@tanstack/react-query";
@@ -19,6 +19,8 @@ const Today = () => {
     queryKey: ["todos"],
     queryFn: async () => {
       const data = await getTodaysTasks(user!.userId, dueBy);
+      // const completed = data.filter((doc) => doc.status === true);
+      // const notCompleted = data.filter((doc)=> doc.status === false)
       return data;
     },
   });
@@ -33,7 +35,7 @@ const Today = () => {
     return <Loading />;
   }
   if (goalsQuery.isError || habitsQuery.isError) {
-    console.error(goalsQuery.error, habitsQuery.error)
+    console.error(goalsQuery.error, habitsQuery.error);
     return <>Some error occured</>;
   }
 
@@ -44,11 +46,11 @@ const Today = () => {
   });
 
   return (
-    <div className="min-h-screen p-4 mx-auto pb-24">
+    <div className="min-h-screen p-4 mx-auto pb-24 pt-12">
       <div className="space-y-6">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-white text-2xl font-bold">My Tasks</h1>
+            <h1 className="text-white text-2xl font-bold">My {todoActive? "Tasks": "Habits"}</h1>
             <p className="text-gray-300 text-sm">Today, {currentDate}</p>
           </div>
         </div>

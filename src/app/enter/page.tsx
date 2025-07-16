@@ -65,20 +65,3 @@ const Enter = () => {
 };
 
 export default Enter;
-
-// <div>
-//   <div>
-//     <button
-//       onClick={() => setOpenForm(true)}
-//       className="bg-black text-white py-2 px-4 rounded"
-//     >
-//       Sign Up
-//     </button>
-//     <button
-//       onClick={() => setOpenForm(false)}
-//       className="bg-black text-white py-2 px-4 rounded"
-//     >
-//       login
-//     </button>
-//   </div>
-// </div>

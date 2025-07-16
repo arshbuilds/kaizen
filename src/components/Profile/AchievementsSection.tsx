@@ -40,7 +40,7 @@ const AchievementsSection = ({
   ];
 
   return (
-    <div className="rounded-xl bg-[#1a2332] p-6 text-white">
+    <div className="rounded-xl bg-[#2e2d48]/60 text-white shadow-lg shadow-[#222952]">
       <h3 className="text-lg font-semibold mb-4">Growth Timeline</h3>
       <div className="flex flex-row gap-4">
         {items.map((item, index) => (

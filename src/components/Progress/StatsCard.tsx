@@ -12,7 +12,7 @@ const StatsCard = ({
   monthlyProgress: number;
 }) => {
   return (
-    <div className="max-w-sm rounded-xl bg-[#262636] border border-purple-400/30 p-6 shadow-lg text-white">
+    <div className="max-w-sm rounded-xl bg-[#2e2d48]/60 p-4 text-white shadow-lg shadow-[#222952]">
       <div className="mb-6">
         <div className="flex items-center space-x-2 mb-2">
           <span className="text-yellow-400 text-xl">🏆</span>

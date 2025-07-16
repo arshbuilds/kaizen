@@ -34,7 +34,6 @@ const LineChart = ({ data }: { data: MonthStats }) => {
       title: {
         display: true,
         text: "Time Spent",
-
       },
     },
   };
@@ -50,7 +49,13 @@ const LineChart = ({ data }: { data: MonthStats }) => {
       },
     ],
   };
-  return <Line className="bg-[#262636] border border-purple-400/30 p-4 my-4 rounded-xl" options={options} data={chartData} />;
+  return (
+    <Line
+      className="border border-purple-400/30 p-4 my-4 rounded-xl bg-[#2e2d48]/20 text-white shadow-lg shadow-[#222952]"
+      options={options}
+      data={chartData}
+    />
+  );
 };
 
 export default LineChart;

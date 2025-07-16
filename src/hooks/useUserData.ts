@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "../stores/useAuthStore";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, onIdTokenChanged } from "firebase/auth";
 import { auth, db } from "../lib/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useEffect } from "react";
@@ -15,24 +15,22 @@ export const useUserData = () => {
   useEffect(() => {
     setLoading(true);
 
-    const unsubscribeAuth = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribeAuth = onIdTokenChanged(auth, async (firebaseUser) => {
       if (!firebaseUser) {
         setUser(null);
         setLoading(false);
-        router.push("/enter");
         return;
       }
-
-      // LIVE LISTENER on the user doc ↓↓↓
       const unsubscribeUserDoc = onSnapshot(
         doc(db, "users", firebaseUser.uid),
         (snap) => {
-          if (snap.exists()) {
+          if (!snap.exists()) {
+            setUser(null);
+          } else {
             const data = snap.data();
             setUser({
               userId: firebaseUser.uid,
               userName: data.userName,
-              email: data.email,
               pfpUrl: data.pfpUrl,
               role: data.role,
               interests: data.interests,
@@ -52,9 +50,6 @@ export const useUserData = () => {
               xp: data.xp,
               streakLastUpdated: data.streakLastUpdated,
             });
-          } else {
-            console.warn("No user doc found!");
-            setUser(null);
           }
           setHasFetchedUser(true);
           setLoading(false);

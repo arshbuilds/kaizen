@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import AuthProvider from "../Providers/AuthProvider";
 import QueryProvider from "../Providers/QueryProvider";
 import Navbar from "../components/ui/Navbar";
+import BackNavigationProvider from "../Providers/BackNavigationProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,20 +27,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const HIDDEN_NAV_PATHS = ["/enter", "/goals/new"]
+  const HIDDEN_NAV_PATHS = ["/enter", "/goals/new"];
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
         suppressHydrationWarning={true}
       >
-        <QueryProvider>
-          <AuthProvider>
-            {children}
-            <Navbar hidden={HIDDEN_NAV_PATHS}/>
-          </AuthProvider>
-          <Toaster position="top-center" />
-        </QueryProvider>
+        <BackNavigationProvider>
+          <QueryProvider>
+            <AuthProvider>
+              {children}
+              <Navbar hidden={HIDDEN_NAV_PATHS} />
+            </AuthProvider>
+            <Toaster position="top-center" />
+          </QueryProvider>
+
+        </BackNavigationProvider>
       </body>
     </html>
   );

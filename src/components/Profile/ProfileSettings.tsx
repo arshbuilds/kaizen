@@ -19,7 +19,7 @@ const tiles = [
 ] as const;
 
 const ProfileSettingsSchema = z.object({
-  name: z.string(),
+  userName: z.string(),
   role: z.string(),
   interests: z.string().array(),
 });
@@ -35,16 +35,15 @@ const ProfileSettings = () => {
     formState: { errors },
   } = useForm<ProfileSettingsFormType>({
     resolver: zodResolver(ProfileSettingsSchema),
-    defaultValues: { interests: user!.interests, name: user?.userName, role: user?.role },
+    defaultValues: { interests: user!.interests, userName: user?.userName, role: user?.role },
   });
 
   const saveSettingsMutation = useMutation({
     mutationFn: async ({
       data,
     }: {
-      data: { name: string; interests: string[]; role: string };
+      data: { userName: string; interests: string[]; role: string };
     }) => {
-      console.log(data);
       return await updateUserData({ userId: user!.userId, data });
     },
     onSuccess: () => {
@@ -65,20 +64,19 @@ const ProfileSettings = () => {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {/* Field 1 */}
       {errors.interests && <>{errors.interests.message}</>}
-      {errors.name && <>{errors.name.message}</>}
+      {errors.userName && <>{errors.userName.message}</>}
       {errors.role && <>{errors.role.message}</>}
-      <div className="bg-[#1a2332] backdrop-blur-sm border border-slate-700/50 rounded-xl p-3">
+      <div className="bg-[#1a2332]/60 backdrop-blur-sm border border-slate-700/50 rounded-xl p-3">
         <h3 className="text-white font-semibold mb-3 px-3">Username</h3>
         <input
-          {...register("name")}
+          {...register("userName")}
           type="text"
-          name="name"
-          placeholder="e.g. Start a YouTube Channel"
+          name="userName"
           className="w-full bg-slate-700/50 text-white placeholder-gray-400 border border-slate-600 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </div>
       {/* Field 2 */}
-      <div className="bg-[#1a2332] backdrop-blur-sm border border-slate-700/50 rounded-xl p-3">
+      <div className="bg-[#1a2332]/60 backdrop-blur-sm border border-slate-700/50 rounded-xl p-3">
         <h3 className="text-white font-semibold mb-3 px-3">Role</h3>
         <input
           {...register("role")}
@@ -89,14 +87,14 @@ const ProfileSettings = () => {
         />
       </div>
       {/* Interests selector */}
-      <div className="grid grid-cols-3 gap-4 max-w-sm bg-[#1a2332] rounded-xl p-4">
+      <div className="grid grid-cols-3 gap-4 max-w-sm bg-[#1a2332]/60 rounded-xl p-4">
         {tiles.map((t) => {
           const active = selected.includes(t.id);
           return (
             <label
               key={t.id}
               className={clsx(
-                "flex flex-col shadow-lg items-center justify-center rounded-xl border p-4 cursor-pointer select-none bg-[#443f71]/20 transition",
+                "flex flex-col shadow items-center justify-center rounded-xl border p-4 cursor-pointer select-none bg-[#443f71]/20 transition",
                 active ? "text-white shadow-cyan-500" : "text-slate-200",
                 "hover:ring-2 hover:ring-indigo-400"
               )}
@@ -118,7 +116,7 @@ const ProfileSettings = () => {
 
       <button
         type="submit"
-        className="px-2 self-center bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition"
+        className="self-center w-full border bg-cyan-400 text-white py-2 rounded-lg transition"
       >
         Save settings
       </button>

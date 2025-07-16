@@ -61,3 +61,18 @@ export function getNextWeekdayDate(weekday: string, weekOffset = 0): Date {
 export function formatDate(date: Date): string {
   return date.toISOString().split("T")[0]; // YYYY-MM-DD
 }
+
+export const getGreeting = () => {
+    const now = new Date();
+    const hour = now.getHours();
+    
+    if (hour < 12) {
+      return "Good Morning";
+    } else if (hour < 18) {
+      return "Good Afternoon";
+    } else if (hour < 22) {
+      return "Good Evening";
+    } else {
+      return "Good Night";
+    }
+  };
