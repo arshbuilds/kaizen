@@ -1,65 +1,73 @@
 "use client";
-import { useState } from "react";
-import { CiHome, CiSquareCheck } from "react-icons/ci";
-import { FiTarget } from "react-icons/fi";
-import { FaRankingStar } from "react-icons/fa6";
-import { FaUserAlt } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { CalendarCheck, Flame, Target, RotateCcw } from "lucide-react";
 
-export default function Navbar({ hidden }: { hidden: string[] }) {
-  const [activeTab, setActiveTab] = useState(0);
+export default function Navbar({ hidden }: { hidden?: string[] }) {
   const pathname = usePathname();
+
   const navItems = [
-    { icon: CiHome, label: "Home", path: "/" },
-    { icon: CiSquareCheck, label: "Tasks", path: "/today" },
-    { icon: FiTarget, label: "Goals", path: "/goals" },
-    { icon: FaRankingStar, label: "leaderboard", path: "/leaderboard" },
-    { icon: FaUserAlt, label: "Profile", path: "/profile" },
+    { icon: CalendarCheck, label: "Today", path: "/today" },
+    { icon: Flame, label: "Focus", path: "/focus" },
+    { icon: Target, label: "Goals", path: "/goals" },
+    { icon: RotateCcw, label: "Review", path: "/review" },
   ];
+
+  if (hidden && hidden.some((h) => pathname.startsWith(h))) {
+    return null;
+  }
+
+  // Also hide on focus and auth screens for zero distraction
+  if (
+    pathname.startsWith("/focus") ||
+    pathname.startsWith("/enter") ||
+    pathname.startsWith("/sign-in") ||
+    pathname.startsWith("/sign-up")
+  ) {
+    return null;
+  }
+
   return (
-    <div
-      className={`${
-        hidden.includes(pathname) && "hidden"
-      } fixed bottom-0 left-0 right-0 flex items-center justify-center z-40 w-full`}
-    >
-      <div className="relative w-full">
-        {/* Main navigation container */}
-        <div className="bg-[#262636] w-full backdrop-blur-sm p-4 border border-gray-700/50">
-          <div className="flex items-center justify-evenly space-x-2">
-            {navItems.map((item, index) => {
+    <nav className="fixed bottom-0 left-0 right-0 z-40 w-full">
+      <div className="relative w-full max-w-lg mx-auto">
+        <div className="bg-[#1e2235]/95 backdrop-blur-md px-6 py-3 border-t border-slate-700/60 shadow-2xl rounded-t-2xl">
+          <div className="flex items-center justify-around">
+            {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = activeTab === index;
+              const isActive =
+                item.path === "/today"
+                  ? pathname === "/" || pathname === "/today"
+                  : pathname.startsWith(item.path);
+
               return (
-                <Link key={index} href={item.path}>
-                  <button
-                    onClick={() => setActiveTab(index)}
-                    className={`
-                    relative p-2 rounded-2xl transition-all duration-300 ease-out
-                    ${
+                <Link
+                  key={item.path}
+                  href={item.path}
+                  className="flex flex-col items-center gap-1 group"
+                >
+                  <div
+                    className={`p-2.5 rounded-xl transition-all duration-200 ${
                       isActive
-                        ? "bg-blue-500 text-white shadow-lg shadow-blue-500/25"
-                        : "bg-gray-700/50 text-gray-400 hover:bg-gray-600/50 hover:text-gray-300"
-                    }
-                    `}
+                        ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-105"
+                        : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                    }`}
                     aria-label={item.label}
                   >
-                    <Icon
-                      size={24}
-                      className={`transition-transform duration-200 ${
-                        isActive ? "scale-110" : "scale-100"
-                      }`}
-                    />
-                  </button>
+                    <Icon size={20} />
+                  </div>
+                  <span
+                    className={`text-[11px] font-medium transition-colors ${
+                      isActive ? "text-blue-400 font-semibold" : "text-slate-400"
+                    }`}
+                  >
+                    {item.label}
+                  </span>
                 </Link>
               );
             })}
           </div>
         </div>
-
-        {/* Bottom accent line */}
-        <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-blue-500 rounded-full"></div>
       </div>
-    </div>
+    </nav>
   );
 }

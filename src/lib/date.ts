@@ -1,14 +1,6 @@
-import { Timestamp } from "firebase/firestore";
-import { FirestoreTimestamp } from "./firebase";
-
-export const getYearFromTimestamp = (
-  timestamp: FirestoreTimestamp
+export const getYearFromDate = (
+  date: Date | string | number
 ): number | null => {
-  let date: Date | null = null;
-  if (timestamp instanceof Timestamp) {
-    date = timestamp.toDate(); // Convert Firestore Timestamp to Date
-  } else if (timestamp instanceof Date) {
-    date = timestamp; // If it's already a Date, use it
-  }
-  return date ? date.getFullYear() : null;
+  const d = new Date(date);
+  return isNaN(d.getTime()) ? null : d.getFullYear();
 };

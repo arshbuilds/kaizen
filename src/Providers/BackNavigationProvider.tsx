@@ -1,5 +1,6 @@
-"use client"
+"use client";
 import { App } from "@capacitor/app";
+import { Capacitor } from "@capacitor/core";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -10,7 +11,10 @@ export default function BackNavigationProvider({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+
   useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
     App.addListener("backButton", ({ canGoBack }) => {
       if (canGoBack && pathname !== "/") {
         router.push("/");
@@ -23,5 +27,6 @@ export default function BackNavigationProvider({
       App.removeAllListeners();
     };
   }, [router, pathname]);
+
   return <>{children}</>;
 }

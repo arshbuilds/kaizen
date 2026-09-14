@@ -1,88 +1,54 @@
 "use client";
-import Loading from "@/src/components/Loading/Loading";
-import AchievementsSection from "@/src/components/Profile/AchievementsSection";
-// import GrowthCoinsSection from "@/src/components/Profile/GrowthCoinsSection";
-import UserData from "@/src/components/Profile/UserData";
-import BarGraph from "@/src/components/Progress/BarGraph";
-import Calendar from "@/src/components/Progress/Calendar";
-import LineChart from "@/src/components/Progress/LineChart";
-import MotivationCard from "@/src/components/Progress/MotivationCard";
-import StatsCard from "@/src/components/Progress/StatsCard";
-import { getGoalsByUser } from "@/src/services/goalServices";
-import { getConsistencyData } from "@/src/services/progressServices";
-import { useAuthStore } from "@/src/stores/useAuthStore";
-import { formatDate } from "@/src/utils/dateTimeUtils";
-import { getCompletionRate } from "@/src/utils/genUtils";
-import { getProfileStats } from "@/src/utils/taskUtils";
-import { useQuery } from "@tanstack/react-query";
 import React from "react";
+import { UserProfile, useUser } from "@clerk/nextjs";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
-// TODO:- continue later
-const Profile = () => {
-  const { user, loading } = useAuthStore();
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = date.getMonth();
-  const goalsQuery = useQuery({
-    queryKey: ["goals"],
-    queryFn: async () => {
-      return (await getGoalsByUser(user!.userId)).filter((doc) => {
-        return doc.title !== "general";
-      });
-    },
-  });
-  const calendarQuery = useQuery({
-    enabled: !!user,
-    queryKey: [user!.userId, "calendar"],
-    queryFn: async () => {
-      if (!user) throw new Error("User not available");
-      return await getConsistencyData({ userId: user.userId, year, month });
-    },
-  });
+export default function ProfilePage() {
+  const { isLoaded, isSignedIn } = useUser();
 
-  if (goalsQuery.isPending || calendarQuery.isPending) return <Loading/>;
-  if (goalsQuery.isError || calendarQuery.isError) return <>Error loading calendar</>;
-  const rate = getCompletionRate(calendarQuery.data!);
-  const today = calendarQuery.data![formatDate(new Date())];
-  if (user === null) {
-    return <>Please login first</>;
-  }
-  if (loading) {
-    return <>loading</>;
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0f172a] text-slate-400">
+        Loading profile...
+      </div>
+    );
   }
 
-  const {timeSpentInHours, tasksCompleted} = getProfileStats(goalsQuery.data)
+  if (!isSignedIn) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#0f172a] text-slate-100 p-4 space-y-4">
+        <p>Please sign in to view your profile.</p>
+        <Link
+          href="/enter"
+          className="px-6 py-2.5 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-500 transition-colors"
+        >
+          Sign In
+        </Link>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen p-4 mx-auto pb-24 pt-12">
-      <div className="space-y-6">
-        <UserData
-          name={user.userName}
-          role={user.role}
-          pfpUrl={user.pfpUrl}
-          createdAt={user.createdAt}
-          interests={user.interests}
-          followers={user.followersCount}
-          following={user.followingCount}
-          goals={user.goalsCount}
-        />
-        <AchievementsSection
-          dayStreak={user.dayStreak}
-          timeSpent={timeSpentInHours}
-          tasksCompleted={tasksCompleted}
-        />
-        <StatsCard
-          dayStreak={user!.dayStreak}
-          bestStreak={user!.bestStreak}
-          monthlyProgress={rate}
-          todayTasks={today.doneCount + today.notDoneCount}
-        />
-        <Calendar data={calendarQuery.data} month={month} year={year} />
-        <BarGraph data={calendarQuery.data} />
-        <LineChart data={calendarQuery.data} />
-        <MotivationCard/>
+    <div className="min-h-screen bg-[#0f172a] text-slate-100 p-4 pb-28 pt-6 max-w-4xl mx-auto space-y-6">
+      <div className="flex items-center gap-3">
+        <Link
+          href="/today"
+          className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
+        >
+          <ArrowLeft size={20} />
+        </Link>
+        <div>
+          <h1 className="text-2xl font-bold text-white">Profile & Account</h1>
+          <p className="text-xs text-slate-400">
+            Manage your credentials and preferences
+          </p>
+        </div>
+      </div>
+
+      <div className="flex justify-center">
+        <UserProfile routing="hash" />
       </div>
     </div>
   );
-};
-
-export default Profile;
+}
