@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Target, Loader2, Plus, X } from "lucide-react";
+import { ArrowLeft, Target, Loader2, Plus, X, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -32,7 +32,13 @@ export default function NewGoalPage() {
   };
 
   const createGoalMutation = useMutation({
-    mutationFn: async (payload: CreateGoalInput) => {
+    mutationFn: async ({
+      payload,
+      withAI,
+    }: {
+      payload: CreateGoalInput;
+      withAI: boolean;
+    }) => {
       const res = await fetch("/api/goals", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -42,21 +48,23 @@ export default function NewGoalPage() {
       if (!res.ok || !json.success) {
         throw new Error(!json.success ? json.error : "Failed to create goal");
       }
-      return json.data;
+      return { data: json.data, withAI };
     },
-    onSuccess: (data) => {
+    onSuccess: ({ data, withAI }) => {
       queryClient.invalidateQueries({ queryKey: ["goals"] });
       toast.success("Goal created successfully");
-      router.push(`/goals/${data.id}`);
+      if (withAI) {
+        router.push(`/goals/${data.id}?decompose=true`);
+      } else {
+        router.push(`/goals/${data.id}`);
+      }
     },
     onError: (error: Error) => {
       toast.error(error.message || "Failed to create goal");
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleCreate = (withAI: boolean) => {
     if (title.trim().length < 2) {
       toast.error("Please enter a goal title of at least 2 characters");
       return;
@@ -70,8 +78,8 @@ export default function NewGoalPage() {
     const cleanedMilestones = milestones
       .map((m) => m.trim())
       .filter((m) => m.length > 0)
-      .map((title, idx) => ({
-        title,
+      .map((t, idx) => ({
+        title: t,
         status: "pending" as const,
         order: idx,
       }));
@@ -83,7 +91,12 @@ export default function NewGoalPage() {
       milestones: cleanedMilestones,
     };
 
-    createGoalMutation.mutate(payload);
+    createGoalMutation.mutate({ payload, withAI });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleCreate(true);
   };
 
   return (
@@ -210,23 +223,36 @@ export default function NewGoalPage() {
           </div>
         </div>
 
-        {/* Submit */}
-        <button
-          type="submit"
-          disabled={createGoalMutation.isPending}
-          className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-lg shadow-blue-500/25 transition-all disabled:opacity-50"
-        >
-          {createGoalMutation.isPending ? (
-            <Loader2 size={18} className="animate-spin" />
-          ) : (
-            <Target size={18} />
-          )}
-          <span>
-            {createGoalMutation.isPending
-              ? "Saving Goal..."
-              : "Create Goal & Open Roadmap"}
-          </span>
-        </button>
+        {/* Action Buttons */}
+        <div className="space-y-2 pt-2">
+          <button
+            type="button"
+            onClick={() => handleCreate(true)}
+            disabled={createGoalMutation.isPending}
+            className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-lg shadow-blue-500/25 transition-all disabled:opacity-50"
+          >
+            {createGoalMutation.isPending ? (
+              <Loader2 size={18} className="animate-spin" />
+            ) : (
+              <Sparkles size={18} className="text-blue-200" />
+            )}
+            <span>
+              {createGoalMutation.isPending
+                ? "Saving Goal..."
+                : "Create & Decompose with AI"}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleCreate(false)}
+            disabled={createGoalMutation.isPending}
+            className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white font-medium border border-slate-700/60 transition-all disabled:opacity-50 text-sm"
+          >
+            <Target size={16} className="text-slate-400" />
+            <span>Create Manual Roadmap</span>
+          </button>
+        </div>
       </form>
     </div>
   );
