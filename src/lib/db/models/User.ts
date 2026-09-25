@@ -9,6 +9,9 @@ export interface IUser extends Document {
   dailyTargetMinutes: number;
   focusDurationMinutes: number;
   preferredWorkBlocks: string[];
+  currentStreak: number;
+  longestStreak: number;
+  lastActiveDate?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -51,6 +54,19 @@ const UserSchema = new Schema<IUser>(
     preferredWorkBlocks: {
       type: [String],
       default: ["morning", "afternoon"],
+    },
+    currentStreak: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    longestStreak: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    lastActiveDate: {
+      type: String,
     },
   },
   {

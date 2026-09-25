@@ -119,15 +119,39 @@ export async function POST(
     action.completedAt = new Date();
     await action.save();
 
-    // Step 2: Update DailyPlan completedMinutes
-    const user = await User.findOne({ clerkId: userId }).lean();
-    const timezone = user?.timezone ?? "UTC";
+    // Step 2: Update DailyPlan completedMinutes and user streak
+    const userDoc = await User.findOne({ clerkId: userId });
+    const timezone = userDoc?.timezone ?? "UTC";
     const todayDate = new Intl.DateTimeFormat("en-CA", {
       timeZone: timezone,
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
     }).format(new Date());
+
+    // Calculate streak
+    const [yStr, mStr, dStr] = todayDate.split("-");
+    const todayUtc = new Date(Date.UTC(Number(yStr), Number(mStr) - 1, Number(dStr)));
+    const yesterdayUtc = new Date(todayUtc.getTime() - 86400000);
+    const yesterdayDate = yesterdayUtc.toISOString().split("T")[0];
+
+    let currentStreak = userDoc?.currentStreak ?? 0;
+    if (userDoc) {
+      if (userDoc.lastActiveDate !== todayDate) {
+        if (userDoc.lastActiveDate === yesterdayDate) {
+          userDoc.currentStreak = (userDoc.currentStreak || 0) + 1;
+        } else {
+          userDoc.currentStreak = 1;
+        }
+        userDoc.longestStreak = Math.max(
+          userDoc.longestStreak || 0,
+          userDoc.currentStreak
+        );
+        userDoc.lastActiveDate = todayDate;
+        await userDoc.save();
+      }
+      currentStreak = userDoc.currentStreak || 0;
+    }
 
     const plan = await DailyPlan.findOne({ userId, date: todayDate });
     let planCompletedMinutes = 0;
@@ -246,6 +270,7 @@ export async function POST(
       goalProgressPercentage: progressPercentage,
       planCompletedMinutes,
       planProgressPercentage,
+      currentStreak,
     };
 
     return NextResponse.json({

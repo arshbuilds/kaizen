@@ -23,6 +23,8 @@ import {
 } from "@/src/lib/validations/dailyPlanSchemas";
 import { TodayActionCard } from "@/src/components/Today/TodayActionCard";
 import { SubtleQuote } from "@/src/components/ui/SubtleQuote";
+import { StreakBadge } from "@/src/components/ui/StreakBadge";
+import { StreakDto } from "@/src/app/api/streaks/route";
 import { toast } from "sonner";
 
 /**
@@ -78,6 +80,20 @@ export default function TodayPage() {
     enabled: isLoaded && isSignedIn,
     refetchOnWindowFocus: false,
   });
+
+  // Fetch streak data
+  const { data: streakResponse } = useQuery<ApiResponse<StreakDto>>({
+    queryKey: ["streaks"],
+    queryFn: async () => {
+      const res = await fetch("/api/streaks");
+      if (!res.ok) throw new Error("Failed to load streak");
+      return res.json();
+    },
+    enabled: isLoaded && isSignedIn,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const streak = streakResponse?.success ? streakResponse.data.currentStreak : 0;
 
   // Generate today's plan mutation
   const generateMutation = useMutation({
@@ -158,7 +174,8 @@ export default function TodayPage() {
           </h1>
           <p className="text-xs text-slate-400 mt-0.5">{currentDate}</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <StreakBadge streak={streak} />
           {isSyncing && (
             <span className="text-[11px] text-blue-400 animate-pulse">Syncing...</span>
           )}

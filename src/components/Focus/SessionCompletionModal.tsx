@@ -115,9 +115,14 @@ export function SessionCompletionModal({
                     style={{ width: `${result.planProgressPercentage}%` }}
                   />
                 </div>
-                <p className="text-[11px] text-slate-500 text-right">
-                  {result.planCompletedMinutes}m completed today
-                </p>
+                <div className="flex items-center justify-between text-[11px] text-slate-500 pt-0.5">
+                  <span>{result.planCompletedMinutes}m completed today</span>
+                  {typeof result.currentStreak === "number" && result.currentStreak > 0 && (
+                    <span className="text-amber-400 font-medium flex items-center gap-1">
+                      🔥 {result.currentStreak} day streak
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 

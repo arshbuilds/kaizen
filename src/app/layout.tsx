@@ -27,7 +27,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const HIDDEN_NAV_PATHS = ["/enter", "/sign-in", "/sign-up", "/goals/new", "/focus"];
+  const HIDDEN_NAV_PATHS = ["/enter", "/sign-in", "/sign-up", "/goals/new"];
 
   return (
     <html lang="en" className="dark">

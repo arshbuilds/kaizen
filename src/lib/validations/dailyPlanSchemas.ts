@@ -126,4 +126,6 @@ export interface FocusCompleteResultDto {
   // Updated daily plan progress
   planCompletedMinutes: number;
   planProgressPercentage: number;
+  // Current consecutive active day streak
+  currentStreak?: number;
 }

@@ -196,7 +196,7 @@ function FocusPageInner() {
         )}
       </div>
 
-      <div className="pb-6 text-xs text-slate-600 text-center">
+      <div className="pb-24 text-xs text-slate-600 text-center">
         Distraction-free environment · Telemetry active
       </div>
 

@@ -1,25 +1,25 @@
 "use client";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { CalendarCheck, Flame, Target, RotateCcw } from "lucide-react";
+import { CalendarCheck, Flame, Target, RotateCcw, User } from "lucide-react";
 
 export default function Navbar({ hidden }: { hidden?: string[] }) {
   const pathname = usePathname();
 
   const navItems = [
     { icon: CalendarCheck, label: "Today", path: "/today" },
-    { icon: Flame, label: "Focus", path: "/focus" },
     { icon: Target, label: "Goals", path: "/goals" },
+    { icon: Flame, label: "Focus", path: "/focus" },
     { icon: RotateCcw, label: "Review", path: "/review" },
+    { icon: User, label: "Profile", path: "/profile" },
   ];
 
   if (hidden && hidden.some((h) => pathname.startsWith(h))) {
     return null;
   }
 
-  // Also hide on focus and auth screens for zero distraction
+  // Also hide on auth screens for zero distraction
   if (
-    pathname.startsWith("/focus") ||
     pathname.startsWith("/enter") ||
     pathname.startsWith("/sign-in") ||
     pathname.startsWith("/sign-up")
@@ -30,7 +30,7 @@ export default function Navbar({ hidden }: { hidden?: string[] }) {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 w-full">
       <div className="relative w-full max-w-lg mx-auto">
-        <div className="bg-[#1e2235]/95 backdrop-blur-md px-6 py-3 border-t border-slate-700/60 shadow-2xl rounded-t-2xl">
+        <div className="bg-[#1e2235]/95 backdrop-blur-md px-4 py-2.5 border-t border-slate-700/60 shadow-2xl rounded-t-2xl">
           <div className="flex items-center justify-around">
             {navItems.map((item) => {
               const Icon = item.icon;
